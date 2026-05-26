@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MINIGAMES — BEGV</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { background: linear-gradient(180deg, #2a160c 0%, #0a0807 100%) !important; min-height: 100vh; }
+  .games-grid {
+    max-width: 1100px;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    padding: 0 20px;
+  }
+  .game-card {
+    background: linear-gradient(135deg, #2a160c 0%, #1a0805 100%);
+    border: 3px solid #c9a85a;
+    border-radius: 10px;
+    padding: 24px;
+    text-decoration: none;
+    color: #c9a85a;
+    transition: transform 0.15s, box-shadow 0.15s;
+    text-align: center;
+    cursor: pointer;
+  }
+  .game-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(255, 230, 0, 0.3);
+    border-color: #ffe600;
+  }
+  .game-card .emoji {
+    font-size: 64px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .game-card h3 {
+    font-family: 'Anton', sans-serif;
+    color: #ffe600;
+    letter-spacing: 3px;
+    font-size: 22px;
+    border: none;
+    margin-bottom: 8px;
+  }
+  .game-card .desc {
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    color: #c9a85a;
+  }
+  .game-card .label {
+    display: inline-block;
+    background: #ff3a8c;
+    color: #fff;
+    padding: 2px 10px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 11px;
+    margin-top: 10px;
+  }
+  .game-card.coming { opacity: 0.6; cursor: not-allowed; }
+
+  /* find steve game */
+  .steve-game {
+    max-width: 900px;
+    margin: 40px auto;
+    background: rgba(255, 247, 220, 0.95);
+    border: 4px solid var(--ink);
+    padding: 24px;
+    border-radius: 10px;
+  }
+  .steve-game h3 {
+    font-family: 'Anton', sans-serif;
+    text-align: center;
+    color: var(--stamp-red);
+    font-size: 28px;
+    letter-spacing: 3px;
+    border: none;
+    margin-bottom: 8px;
+  }
+  .steve-game .anweisung {
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    color: var(--ink);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  .steve-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 6px;
+    background: #ecd8b8;
+    padding: 14px;
+    border: 2px solid var(--ink);
+    min-height: 300px;
+  }
+  .steve-zelle {
+    aspect-ratio: 1;
+    background: #fff;
+    border: 1px solid #ccc;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    user-select: none;
+  }
+  .steve-zelle:hover { transform: scale(1.1); background: #ffe; z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .steve-zelle.gefunden { background: #1a8a2c; color: #fff; transform: scale(1.2); }
+  .steve-zelle.falsch { background: #b8000f; color: #fff; animation: shake 0.3s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+
+  .steve-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+  }
+  .steve-info b { font-family: 'Anton', sans-serif; color: var(--stamp-red); font-size: 18px; letter-spacing: 2px; }
+  .steve-info button {
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    cursor: pointer;
+  }
+  .steve-info button:hover { background: var(--stamp-red); }
+
+  .nav-back {
+    text-align: center;
+    margin: 30px 0;
+  }
+  .nav-back a {
+    color: #c9a85a;
+    text-decoration: none;
+    border: 1px solid #c9a85a;
+    padding: 8px 18px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 12px;
+    display: inline-block;
+    margin: 0 5px;
+  }
+  .nav-back a:hover { background: #c9a85a; color: #1a1410; }
+</style>
+</head>
+<body>
+
+<div class="gov-bar">
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/minigames — Mitarbeiter-Belustigung</span>
+  <span>Genehmigt durch Aclasher (admin)</span>
+</div>
+
+<header class="behoerde">
+  <a href="../index.html" style="text-decoration:none;"><div class="wappen">K</div></a>
+  <h1>MINIGAMES
+    <small>OFFIZIELL GENEHMIGTE ZEITVERSCHWENDUNG · LIZENZ DURCH BEGV</small>
+  </h1>
+  <div class="right">
+    <a href="../index.html" style="color:#c9a85a; text-decoration:none; font-size:11px; letter-spacing:1px;">▸ ZURÜCK INS ARCHIV</a>
+  </div>
+</header>
+
+<section class="hero" style="padding: 30px 20px 10px;">
+  <div class="leak-banner">MITARBEITER-INTERN · ZUR BELUSTIGUNG</div>
+  <h2><span class="red">MINI</span>GAMES</h2>
+  <div class="untertitel">drei spiele. keine sinnhaftigkeit. maximaler aura-verbrauch.</div>
+</section>
+
+<div class="games-grid">
+  <a href="clicker.html" class="game-card">
+    <span class="emoji">💎</span>
+    <h3>AURA-CLICKER</h3>
+    <div class="desc">
+      drück den knopf. öfter. wieder. 10 upgrades schalten dich frei. ende: nie.
+    </div>
+    <span class="label">COOKIE CLONE</span>
+  </a>
+  <a href="reaktion.html" class="game-card">
+    <span class="emoji">⚡</span>
+    <h3>WAVE-PART REACTION</h3>
+    <div class="desc">
+      teste deine reaktionszeit. SananenBaft urteilt über dich auf basis deiner ms.
+    </div>
+    <span class="label">REFLEX</span>
+  </a>
+  <a href="../gamble.html" class="game-card">
+    <span class="emoji">🎰</span>
+    <h3>BAFT-COIN AUTOMAT</h3>
+    <div class="desc">
+      die offizielle gambling-ecke. 100 baft-coins start. jackpot bei 3× 💎.
+    </div>
+    <span class="label">CASINO</span>
+  </a>
+  <a href="../marbles.html" class="game-card">
+    <span class="emoji">🔴</span>
+    <h3>MARBLES-ANTRAG</h3>
+    <div class="desc">
+      klick die murmel, höre kuckucks ausreden. spielbar seit tag 412.
+    </div>
+    <span class="label">FRUSTRIEREND</span>
+  </a>
+  <a href="chat-steve.html" class="game-card">
+    <span class="emoji">💬</span>
+    <h3>CHAT MIT STEVE</h3>
+    <div class="desc">
+      vereinbare ein meetup mit steve. mehrere pfade. ein ende. spoiler: er ist nie da.
+    </div>
+    <span class="label" style="background:#007aff;">DIALOG</span>
+  </a>
+  <a href="labyrinth.html" class="game-card">
+    <span class="emoji">🌀</span>
+    <h3>ENTKOMME KUCKUCK</h3>
+    <div class="desc">
+      labyrinth. du 1 schritt. kuckuck 2. erreiche den exit bevor er dich kriegt.
+    </div>
+    <span class="label" style="background:#ff3a8c;">VERFOLGUNG</span>
+  </a>
+  <a href="tictactoe.html" class="game-card">
+    <span class="emoji">🪵</span>
+    <h3>TIC TAC TOE vs TRIPLE-T</h3>
+    <div class="desc">
+      du gegen den bot. minimax. das beste ist ein draw. das wird nicht passieren.
+    </div>
+    <span class="label" style="background:#8b4513;">STRATEGIE</span>
+  </a>
+  <a href="https://jklm.fun/" target="_blank" rel="noopener" class="game-card" style="background: linear-gradient(135deg, #ff3a8c 0%, #ffe600 100%); border-color: #ffe600;">
+    <span class="emoji">💣</span>
+    <h3 style="color:#1a1410;">BESTES MINIGAME EVER</h3>
+    <div class="desc" style="color:#1a1410; font-weight:600;">
+      jklm.fun — bombparty. nicht von uns. aber objektiv das beste.
+    </div>
+    <span class="label" style="background:#1a1410; color:#ffe600;">EXTERN · GOAT</span>
+  </a>
+</div>
+
+<!-- =============================================================
+     GLOBAL LEADERBOARD
+     ============================================================= -->
+<section style="max-width: 900px; margin: 50px auto; padding: 0 20px;">
+  <h3 style="font-family:'Anton',sans-serif; font-size:32px; letter-spacing:3px; color:#ffe600; text-align:center; margin-bottom:6px; border:none;">
+    🏆 GLOBAL LEADERBOARD
+  </h3>
+  <div style="text-align:center; font-family:'Caveat',cursive; font-size:18px; color:#c9a85a; margin-bottom:20px;">
+    — echte daten aus echten servern · verifiziert durch jughead (schläft) —
+  </div>
+
+  <div style="background: linear-gradient(180deg, #2a160c 0%, #1a0805 100%); border: 3px solid #c9a85a; border-radius: 10px; padding: 20px; box-shadow: 0 0 40px rgba(201,168,90,0.2);">
+
+    <!-- platz 1 -->
+    <div style="background: linear-gradient(135deg, #ffe600 0%, #c49a00 100%); padding: 20px; margin-bottom: 14px; border: 3px solid #1a1410; box-shadow: 4px 4px 0 #000; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="font-family:'Anton',sans-serif; font-size:42px; color:#1a1410; min-width:50px;">1</div>
+        <div>
+          <div style="font-family:'Anton',sans-serif; font-size:24px; letter-spacing:2px; color:#1a1410;">eingdnoob</div>
+          <div style="font-family:'Courier Prime',monospace; font-size:11px; color:#4a3a26; letter-spacing:1px;">(mit bot) · verifiziert durch niemanden</div>
+        </div>
+      </div>
+      <div style="font-family:'Anton',sans-serif; font-size:28px; color:#1a1410; letter-spacing:2px;">∞ pts</div>
+    </div>
+
+    <!-- weitere plätze -->
+    <div id="leaderboard-rest"></div>
+
+    <div style="margin-top: 20px; padding-top: 14px; border-top: 1px dashed #4a3a26; font-family:'Courier Prime',monospace; font-size:11px; color:#888; letter-spacing:1px; text-align:center;">
+      stand: jetzt · spieler insgesamt: 47.823 · davon aktiv: 1 (du)<br>
+      ranking-algorithmus: aura-basiert · einsprüche an jughead richten (er schläft)
+    </div>
+  </div>
+</section>
+
+<!-- =============================================================
+     FIND STEVE — direkt eingebettet
+     ============================================================= -->
+<div class="steve-game">
+  <h3>🔍 FIND STEVE</h3>
+  <div class="anweisung">
+    Steve hat einen <b>Schnurrbart</b> (🧔). Klick ihn so schnell wie möglich. Achtung: Jughead (🧑‍💼) ist auch dabei und sieht ähnlich aus.
+  </div>
+  <div class="steve-board" id="steve-board"></div>
+  <div class="steve-info">
+    <div>RUNDE: <b id="steve-runde">0</b></div>
+    <div>BESTE ZEIT: <b id="steve-best">—</b></div>
+    <div>LETZTE ZEIT: <b id="steve-last">—</b></div>
+    <button id="steve-neu">▸ NEUE RUNDE</button>
+  </div>
+  <div id="steve-msg" style="text-align:center; margin-top:14px; font-family:'Caveat',cursive; font-size:20px; color:var(--ink-soft); min-height:30px;"></div>
+</div>
+
+<div class="nav-back">
+  <a href="../index.html">← AKTEN-ARCHIV</a>
+  <a href="../easter-eggs.html">📋 EASTER-EGG-LISTE</a>
+  <a href="../gamble.html">🎰 GAMBLE</a>
+</div>
+
+<footer>
+  <h4>MINIGAMES · BEGV</h4>
+  <div class="disclaim">spielen kann süchtig machen. besonders wenn man eh schon süchtig ist.</div>
+  <div class="winzig">© 2026 BEGV · Spielzeit wird auf das Aura-Konto angerechnet</div>
+</footer>
+
+<script>
+// =================================================================
+// GLOBAL LEADERBOARD (fake einträge)
+// =================================================================
+const LEADERBOARD_REST = [
+  { rang:  2, name: 'KrmaL',                hinweis: 'aktiv seit "Black Blizzard"',           pkt: '47.382' },
+  { rang:  3, name: 'plexi',                hinweis: 'punkte fürs ELE-spongebob-anhören',    pkt: '13.337' },
+  { rang:  4, name: 'Aclasher (admin)',     hinweis: 'admin-bonus · root-zugriff',           pkt: '9.000'  },
+  { rang:  5, name: 'Triple-T',             hinweis: 'italienischer brainrot-bonus',         pkt: '7.777'  },
+  { rang:  6, name: 'ArenaiTV',             hinweis: '"das ist free"-multiplier',            pkt: '4.200'  },
+  { rang:  7, name: 'Kurzhaarmeister',      hinweis: 'AKA Steve · 732 demons multiplier',    pkt: '732'    },
+  { rang:  8, name: 'mystery',              hinweis: 'pseudonym nicht eindeutig zuordbar',   pkt: '?'      },
+  { rang:  9, name: 'Kuckuck',              hinweis: 'verifizierung läuft seit jahren',      pkt: '— pending' },
+  { rang: 10, name: 'Mr.Best',              hinweis: 'tatsächliche demon-anzahl: 3',         pkt: '3'      },
+  { rang: 11, name: 'einGDNoob (ohne bot)', hinweis: 'eingdnoob ohne bot · viel niedriger',  pkt: '47'     },
+  { rang: 12, name: 'Safti',                hinweis: 'döner-lieferung noch ausstehend',      pkt: '0'      },
+  { rang: 13, name: 'Captain Carry',        hinweis: 'in pension · seit ende kolosseum',     pkt: '— ret.' },
+  { rang: 14, name: 'der Holzmann',         hinweis: 'mythologische entität · nicht real?',  pkt: '— myth' },
+  { rang: 15, name: 'Shine For Ne',         hinweis: 'verdächtige 19999 crazy demons',       pkt: '-1'     },
+  { rang: 16, name: 'der Acer-Stuhl',       hinweis: 'wollte teilnehmen · ist ein stuhl',    pkt: '0,5'    },
+  { rang: '?', name: 'DU',                  hinweis: 'aktueller spieler · noch nicht ranked', pkt: 'platz 12.847 oder so', du: true },
+  { rang: 12847, name: 'Jughead',           hinweis: 'negative aura · ständig weggeweht',    pkt: '-47', schlimm: true },
+  { rang: 'vermisst', name: 'Steve',        hinweis: 'siehe chat-minigame · nie da',         pkt: '— vermisst', schlimm: true }
+];
+const $lb = document.getElementById('leaderboard-rest');
+if ($lb) {
+  $lb.innerHTML = LEADERBOARD_REST.map(e => `
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:${e.du ? 'rgba(0,122,255,0.15)' : e.schlimm ? 'rgba(184,0,15,0.15)' : '#1a0805'}; border-left:4px solid ${e.du ? '#007aff' : e.schlimm ? '#b8000f' : '#4a3a26'}; margin-bottom:5px; gap:10px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+        <div style="font-family:'Anton',sans-serif; font-size:22px; color:#c9a85a; min-width:50px; letter-spacing:1px;">${e.rang}</div>
+        <div style="min-width:0;">
+          <div style="font-family:'Anton',sans-serif; font-size:15px; color:#ffe600; letter-spacing:1.5px;">${e.name}</div>
+          <div style="font-family:'Courier Prime',monospace; font-size:10px; color:#888; letter-spacing:1px;">${e.hinweis}</div>
+        </div>
+      </div>
+      <div style="font-family:'Anton',sans-serif; font-size:16px; color:${e.schlimm ? '#ff5050' : '#c9a85a'}; letter-spacing:1.5px;">${e.pkt}</div>
+    </div>
+  `).join('');
+}
+
+// =================================================================
+// FIND STEVE GAME
+// =================================================================
+const $board = document.getElementById('steve-board');
+const $msg = document.getElementById('steve-msg');
+const $runde = document.getElementById('steve-runde');
+const $best = document.getElementById('steve-best');
+const $last = document.getElementById('steve-last');
+
+const steveState = {
+  runde: 0,
+  best: parseInt(localStorage.getItem('steve-best')||'99999',10),
+  startZeit: 0
+};
+
+// alle möglichen "ablenkungs"-figuren
+const FIGUREN = ['🧑','👨','👨‍💼','👨‍🦱','👨‍🦰','👨‍🦳','👨‍🎤','👨‍🎨','👨‍🔬','🧔‍♂','👨‍🌾','👨‍🦲','🧑‍🦰','🧑‍🦱','🧑‍💼','👤'];
+const STEVE = '🧔'; // mit schnurrbart
+
+function neueRunde() {
+  steveState.runde++;
+  $runde.textContent = steveState.runde;
+  $msg.textContent = '';
+  $board.innerHTML = '';
+
+  // 60 zellen, steve zufällig in einer
+  const groesse = Math.min(60 + steveState.runde * 8, 200);
+  const stevePos = Math.floor(Math.random() * groesse);
+
+  for (let i = 0; i < groesse; i++) {
+    const z = document.createElement('div');
+    z.className = 'steve-zelle';
+    if (i === stevePos) {
+      z.textContent = STEVE;
+      z.dataset.steve = '1';
+    } else {
+      z.textContent = FIGUREN[Math.floor(Math.random() * FIGUREN.length)];
+    }
+    z.addEventListener('click', () => klick(z));
+    $board.appendChild(z);
+  }
+  steveState.startZeit = performance.now();
+}
+
+function klick(z) {
+  if (z.classList.contains('gefunden') || z.classList.contains('falsch')) return;
+  if (z.dataset.steve === '1') {
+    const ms = Math.round(performance.now() - steveState.startZeit);
+    z.classList.add('gefunden');
+    if (ms < steveState.best) {
+      steveState.best = ms;
+      localStorage.setItem('steve-best', ms);
+      $msg.innerHTML = `🏆 NEUE BESTZEIT: <b>${ms}ms</b> — du bist offiziell Steve-Sucher des Monats.`;
+    } else {
+      $msg.innerHTML = `✓ steve gefunden in <b>${ms}ms</b>. ${urteilSteve(ms)}`;
+    }
+    $last.textContent = ms + 'ms';
+    $best.textContent = (steveState.best === 99999 ? '—' : steveState.best + 'ms');
+  } else {
+    z.classList.add('falsch');
+    setTimeout(() => z.classList.remove('falsch'), 400);
+    $msg.textContent = '❌ das war NICHT Steve. das war wahrscheinlich Jughead. oder ArenaiTV. wer weiß.';
+  }
+}
+
+function urteilSteve(ms) {
+  if (ms < 1000) return 'sehr gut. fast unheimlich gut.';
+  if (ms < 2500) return 'normal. wie ein durchschnittlicher ermittler.';
+  if (ms < 5000) return 'okay. Steve hat sich nicht mal versteckt.';
+  if (ms < 10000) return 'langsam. selbst Jughead hätte ihn schneller gefunden.';
+  return 'sehr langsam. wie kann man steve übersehen? er ist offensichtlich.';
+}
+
+document.getElementById('steve-neu').addEventListener('click', neueRunde);
+
+if (steveState.best < 99999) $best.textContent = steveState.best + 'ms';
+neueRunde();
+
+console.log('%c🎮 MINIGAMES HUB', 'background:#c9a85a; color:#1a1410; padding:8px 16px; font-size:16px; font-weight:bold;');
+</script>
+</body>
+</html>

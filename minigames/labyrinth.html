@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENTKOMME KUCKUCK — BEGV Minigames</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body {
+    background: radial-gradient(ellipse at center, #2a1015 0%, #0a0807 70%) !important;
+    min-height: 100vh;
+  }
+
+  .laby-wrap {
+    max-width: 720px;
+    margin: 30px auto;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid #c9a85a;
+    padding: 12px 18px;
+    margin-bottom: 18px;
+    color: #ffe600;
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .status-bar .label {
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    color: #c9a85a;
+    font-size: 11px;
+    display: block;
+  }
+  .status-bar .wert {
+    font-size: 22px;
+    color: #ffe600;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+  }
+
+  .maze {
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    gap: 0;
+    max-width: 540px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+    background: #0a0807;
+    padding: 4px;
+    border: 4px solid #c9a85a;
+    box-shadow: 0 0 60px rgba(255, 58, 140, 0.3);
+  }
+  .zelle {
+    position: relative;
+    display: grid;
+    place-items: center;
+    font-size: clamp(14px, 3vw, 24px);
+    line-height: 1;
+    user-select: none;
+    transition: background 0.1s;
+  }
+  .zelle.wand {
+    background: linear-gradient(135deg, #4a3a26 0%, #2a1a0d 100%);
+    border: 1px solid #1a1410;
+  }
+  .zelle.weg {
+    background: #1a1410;
+  }
+  .zelle.exit {
+    background: linear-gradient(135deg, #2bff52 0%, #1a8a2c 100%);
+    color: #000;
+    font-family: 'Anton', sans-serif;
+    font-weight: bold;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.4);
+    animation: exit-pulse 1.4s infinite alternate;
+  }
+  @keyframes exit-pulse {
+    from { box-shadow: inset 0 0 12px rgba(0,0,0,0.4); }
+    to { box-shadow: inset 0 0 24px rgba(0,0,0,0.6), 0 0 30px #2bff52; }
+  }
+  .zelle.player {
+    background: #007aff;
+    color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 16px #007aff;
+    animation: player-pulse 0.8s infinite alternate;
+  }
+  @keyframes player-pulse {
+    from { transform: scale(0.85); }
+    to { transform: scale(1); }
+  }
+  .zelle.kuckuck {
+    background: #ff3a8c;
+    color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 16px #ff3a8c;
+    animation: kuckuck-pulse 0.5s infinite alternate;
+  }
+  @keyframes kuckuck-pulse {
+    from { transform: scale(0.9) rotate(-5deg); }
+    to { transform: scale(1.05) rotate(5deg); }
+  }
+  .zelle.spur {
+    background: rgba(255, 58, 140, 0.15);
+    transition: background 1s;
+  }
+
+  .controls-info {
+    margin-top: 20px;
+    color: #c9a85a;
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .controls-info b { color: #ffe600; }
+  .controls-info .key {
+    display: inline-block;
+    background: #1a1410;
+    border: 1px solid #c9a85a;
+    padding: 2px 8px;
+    font-family: 'Anton', sans-serif;
+    margin: 0 2px;
+    border-radius: 3px;
+  }
+
+  /* virtuelle pfeiltasten für mobil */
+  .virtual-keys {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    max-width: 220px;
+    margin: 14px auto 0;
+  }
+  .virtual-keys button {
+    aspect-ratio: 1;
+    background: #1a1410;
+    color: #ffe600;
+    border: 2px solid #c9a85a;
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .virtual-keys button:active { background: #c9a85a; color: #1a1410; }
+  .virtual-keys button.leer { visibility: hidden; }
+
+  .game-over {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    display: none;
+    place-items: center;
+    z-index: 9999;
+    padding: 20px;
+  }
+  .game-over.aktiv { display: grid; }
+  .game-over-card {
+    background: linear-gradient(135deg, #2a160c 0%, #1a0805 100%);
+    border: 4px solid #ffe600;
+    padding: 40px 30px;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 0 80px rgba(255, 58, 140, 0.5);
+  }
+  .game-over-card.gewonnen { border-color: #2bff52; }
+  .game-over-card h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: 42px;
+    letter-spacing: 4px;
+    color: #ff3a8c;
+    margin-bottom: 14px;
+    text-shadow: 3px 3px 0 #000;
+  }
+  .game-over-card.gewonnen h2 { color: #2bff52; }
+  .game-over-card .flavor {
+    font-family: 'Special Elite', monospace;
+    color: #c9a85a;
+    font-size: 14px;
+    margin: 12px 0 20px;
+    line-height: 1.5;
+  }
+  .game-over-card button {
+    background: #ffe600;
+    color: #1a1410;
+    border: 3px solid #1a1410;
+    padding: 14px 26px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 3px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 6px;
+    box-shadow: 4px 4px 0 #000;
+  }
+  .game-over-card button:hover { background: #fff; }
+
+  .nav-back {
+    text-align: center;
+    margin: 30px 0;
+  }
+  .nav-back a {
+    color: #c9a85a;
+    text-decoration: none;
+    border: 1px solid #c9a85a;
+    padding: 8px 18px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 12px;
+    display: inline-block;
+    margin: 0 5px;
+  }
+  .nav-back a:hover { background: #c9a85a; color: #1a1410; }
+</style>
+</head>
+<body>
+
+<div class="gov-bar">
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/minigames/labyrinth — Verfolgungs-Simulation</span>
+  <span>kuckuck macht 2 schritte. du machst 1.</span>
+</div>
+
+<header class="behoerde">
+  <a href="../index.html" style="text-decoration:none;"><div class="wappen">K</div></a>
+  <h1>ENTKOMME KUCKUCK
+    <small>LABYRINTH-EVAKUIERUNGS-PROTOKOLL · MINIGAME #5</small>
+  </h1>
+  <div class="right">
+    <a href="index.html" style="color:#c9a85a; text-decoration:none; font-size:11px; letter-spacing:1px;">▸ MINIGAMES HUB</a>
+  </div>
+</header>
+
+<div class="laby-wrap">
+  <div class="status-bar">
+    <div>
+      <span class="label">DU 🟦</span>
+      <span class="wert" id="player-zuege">0</span>
+      <span class="label">züge</span>
+    </div>
+    <div>
+      <span class="label">KUCKUCK 🟪</span>
+      <span class="wert" id="kuckuck-zuege">0</span>
+      <span class="label">züge</span>
+    </div>
+    <div>
+      <span class="label">DISTANZ</span>
+      <span class="wert" id="distanz">—</span>
+    </div>
+    <div>
+      <span class="label">RUNDE</span>
+      <span class="wert" id="runde">1</span>
+    </div>
+  </div>
+
+  <div class="maze" id="maze"></div>
+
+  <div class="controls-info">
+    <div>Steuerung: <span class="key">↑</span> <span class="key">↓</span> <span class="key">←</span> <span class="key">→</span> oder <span class="key">W</span> <span class="key">A</span> <span class="key">S</span> <span class="key">D</span></div>
+    <div><b>du machst 1 schritt</b> · danach <b style="color:#ff3a8c;">macht kuckuck 2</b> · erreiche den <b style="color:#2bff52;">EXIT</b> bevor er dich kriegt</div>
+  </div>
+
+  <div class="virtual-keys">
+    <button class="leer"></button>
+    <button data-dir="up">↑</button>
+    <button class="leer"></button>
+    <button data-dir="left">←</button>
+    <button data-dir="down">↓</button>
+    <button data-dir="right">→</button>
+  </div>
+</div>
+
+<div class="nav-back">
+  <a href="index.html">← MINIGAMES HUB</a>
+  <a href="../index.html">← AKTEN-ARCHIV</a>
+</div>
+
+<div class="game-over" id="game-over">
+  <div class="game-over-card" id="game-over-card">
+    <h2 id="game-over-titel">KUCKUCK HAT DICH ERWISCHT</h2>
+    <div class="flavor" id="game-over-flavor"></div>
+    <div>
+      <button onclick="neuStarten()">🔄 NOCHMAL</button>
+      <button onclick="window.location.href='index.html'">HUB</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <h4>LABYRINTH-EVAKUIERUNGS-PROTOKOLL · BEGV</h4>
+  <div class="disclaim">Kuckuck wurde mit Aura kalibriert. Pathfinding optimiert von Aclasher (admin).</div>
+  <div class="winzig">© 2026 BEGV · Wenn er dich kriegt, war es vermutlich plexi's Schuld</div>
+</footer>
+
+<script>
+// =================================================================
+// LABYRINTH-MINIGAME
+// =================================================================
+const MAZE_LAYOUT = [
+  "###########",
+  "#P........#",
+  "#.###.###.#",
+  "#...#.#...#",
+  "#.#.#.#.#.#",
+  "#.#.....#.#",
+  "#.#.###.#.#",
+  "#.....#...#",
+  "#.#####.#.#",
+  "#.K......#E",
+  "###########"
+];
+
+const ROWS = MAZE_LAYOUT.length;
+const COLS = MAZE_LAYOUT[0].length;
+
+let maze = [];          // 2D array: 'wand' | 'weg' | 'exit'
+let player = { x:0, y:0 };
+let kuckuck = { x:0, y:0 };
+let exit = { x:0, y:0 };
+let playerZuege = 0;
+let kuckuckZuege = 0;
+let runde = parseInt(localStorage.getItem('laby-runde')||'1', 10);
+let bestSiege = parseInt(localStorage.getItem('laby-siege')||'0', 10);
+let aktiv = true;
+
+const $maze = document.getElementById('maze');
+
+function initMaze() {
+  maze = [];
+  for (let y = 0; y < ROWS; y++) {
+    const row = [];
+    for (let x = 0; x < COLS; x++) {
+      const c = MAZE_LAYOUT[y][x];
+      if (c === '#') row.push('wand');
+      else if (c === 'E') { row.push('exit'); exit = { x, y }; }
+      else if (c === 'P') { row.push('weg'); player = { x, y }; }
+      else if (c === 'K') { row.push('weg'); kuckuck = { x, y }; }
+      else row.push('weg');
+    }
+    maze.push(row);
+  }
+  playerZuege = 0;
+  kuckuckZuege = 0;
+  aktiv = true;
+}
+
+function rendere() {
+  $maze.innerHTML = '';
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      const zelle = document.createElement('div');
+      zelle.className = 'zelle ' + maze[y][x];
+      if (player.x === x && player.y === y) {
+        zelle.classList.add('player');
+        zelle.textContent = '🟦';
+      } else if (kuckuck.x === x && kuckuck.y === y) {
+        zelle.classList.add('kuckuck');
+        zelle.textContent = '🐦';
+      } else if (exit.x === x && exit.y === y) {
+        zelle.classList.add('exit');
+        zelle.textContent = 'E';
+      }
+      $maze.appendChild(zelle);
+    }
+  }
+  document.getElementById('player-zuege').textContent = playerZuege;
+  document.getElementById('kuckuck-zuege').textContent = kuckuckZuege;
+  document.getElementById('runde').textContent = runde;
+  document.getElementById('distanz').textContent = manhattan(player, kuckuck);
+}
+
+function manhattan(a, b) {
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+}
+
+function istBegehbar(x, y) {
+  if (x < 0 || x >= COLS || y < 0 || y >= ROWS) return false;
+  return maze[y][x] !== 'wand';
+}
+
+function bewege(dx, dy) {
+  if (!aktiv) return;
+  const nx = player.x + dx;
+  const ny = player.y + dy;
+  if (!istBegehbar(nx, ny)) return;
+  player.x = nx;
+  player.y = ny;
+  playerZuege++;
+  // erreicht exit?
+  if (player.x === exit.x && player.y === exit.y) {
+    rendere();
+    gewonnen();
+    return;
+  }
+  // gefangen?
+  if (player.x === kuckuck.x && player.y === kuckuck.y) {
+    rendere();
+    verloren();
+    return;
+  }
+  rendere();
+  // kuckuck macht 2 schritte (mit kleiner verzögerung pro schritt)
+  setTimeout(() => bewegeKuckuck(1), 200);
+}
+
+function bewegeKuckuck(schritt) {
+  if (!aktiv) return;
+  const pfad = bfs(kuckuck, player);
+  if (pfad && pfad.length > 1) {
+    const next = pfad[1];
+    kuckuck.x = next.x;
+    kuckuck.y = next.y;
+    kuckuckZuege++;
+    if (kuckuck.x === player.x && kuckuck.y === player.y) {
+      rendere();
+      verloren();
+      return;
+    }
+  }
+  rendere();
+  if (schritt < 2 && aktiv) {
+    setTimeout(() => bewegeKuckuck(schritt + 1), 250);
+  }
+}
+
+// BFS für shortest path
+function bfs(start, ziel) {
+  const visited = new Set();
+  const queue = [[start]];
+  visited.add(start.x + ',' + start.y);
+  while (queue.length > 0) {
+    const pfad = queue.shift();
+    const node = pfad[pfad.length - 1];
+    if (node.x === ziel.x && node.y === ziel.y) return pfad;
+    const nachbarn = [
+      { x: node.x + 1, y: node.y },
+      { x: node.x - 1, y: node.y },
+      { x: node.x, y: node.y + 1 },
+      { x: node.x, y: node.y - 1 }
+    ];
+    for (const n of nachbarn) {
+      if (!istBegehbar(n.x, n.y)) continue;
+      const key = n.x + ',' + n.y;
+      if (visited.has(key)) continue;
+      visited.add(key);
+      queue.push([...pfad, n]);
+    }
+  }
+  return null;
+}
+
+function gewonnen() {
+  aktiv = false;
+  bestSiege++;
+  localStorage.setItem('laby-siege', bestSiege);
+  const card = document.getElementById('game-over-card');
+  card.classList.add('gewonnen');
+  document.getElementById('game-over-titel').textContent = '✓ DU BIST ENTKOMMEN!';
+  const flavors = [
+    `Du hast Kuckuck in ${playerZuege} Zügen abgehängt.`,
+    `Selbst Kuckuck konnte dich nicht carrien. Glückwunsch.`,
+    `Bisherige Siege: ${bestSiege}. Jughead wäre stolz (wenn er wach wäre).`,
+    `Du bist offiziell ${playerZuege} Schritte weniger durchgeknallt als Kuckuck.`,
+    `Du hast ihm ${kuckuckZuege} Schritte abgenommen. Aclasher hat das mitgezählt.`
+  ];
+  document.getElementById('game-over-flavor').innerHTML =
+    `Geschafft! 🎉<br><br>${flavors[Math.floor(Math.random()*flavors.length)]}`;
+  document.getElementById('game-over').classList.add('aktiv');
+}
+
+function verloren() {
+  aktiv = false;
+  runde++;
+  localStorage.setItem('laby-runde', runde);
+  const card = document.getElementById('game-over-card');
+  card.classList.remove('gewonnen');
+  document.getElementById('game-over-titel').textContent = '✗ KUCKUCK HAT DICH ERWISCHT';
+  const flavors = [
+    `Du wurdest nach ${playerZuege} Zügen geschnappt. Wave-Part incoming.`,
+    `Kuckuck hat dich gecarried. Leider in die falsche Richtung.`,
+    `Plexi hat während deines Fluchtversuchs ELE SPONGEBOB angemacht. Das hat dich abgelenkt.`,
+    `Der Acer-Stuhl bestätigt: du warst zu langsam. Er hätte schneller gerollt.`,
+    `Distanz war ${manhattan(player, kuckuck)}. Du bist offiziell zoinkifiziert.`,
+    `Triple-T hätte dich mit dem Holz schneller eingeholt.`,
+    `Jughead wurde währenddessen 18× weggeweht. Du musst dich nicht so schlecht fühlen. Doch.`
+  ];
+  document.getElementById('game-over-flavor').innerHTML =
+    `R.I.P.<br><br>${flavors[Math.floor(Math.random()*flavors.length)]}<br><br>Bisherige Siege gesamt: <b>${bestSiege}</b>`;
+  document.getElementById('game-over').classList.add('aktiv');
+}
+
+window.neuStarten = function() {
+  document.getElementById('game-over').classList.remove('aktiv');
+  document.getElementById('game-over-card').classList.remove('gewonnen');
+  initMaze();
+  rendere();
+};
+
+// keyboard
+document.addEventListener('keydown', (e) => {
+  if (e.target.matches('input, textarea')) return;
+  const dir = {
+    'ArrowUp':[0,-1],'w':[0,-1],'W':[0,-1],
+    'ArrowDown':[0,1],'s':[0,1],'S':[0,1],
+    'ArrowLeft':[-1,0],'a':[-1,0],'A':[-1,0],
+    'ArrowRight':[1,0],'d':[1,0],'D':[1,0]
+  }[e.key];
+  if (dir) { e.preventDefault(); bewege(dir[0], dir[1]); }
+});
+document.querySelectorAll('.virtual-keys button[data-dir]').forEach(b => {
+  b.addEventListener('click', () => {
+    const dirs = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] };
+    const d = dirs[b.dataset.dir];
+    bewege(d[0], d[1]);
+  });
+});
+
+initMaze();
+rendere();
+
+console.log('%c🌀 ENTKOMME KUCKUCK', 'background:#ff3a8c; color:#fff; padding:8px 16px; font-size:16px; font-weight:bold;');
+console.log('%cdu machst 1 schritt. kuckuck macht 2. viel glück.', 'color:#c9a85a; font-size:12px;');
+</script>
+</body>
+</html>

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHAT MIT STEVE — BEGV Minigames</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body {
+    background: linear-gradient(180deg, #1a1410 0%, #0a0807 100%) !important;
+    min-height: 100vh;
+  }
+
+  .chat-app {
+    max-width: 440px;
+    margin: 30px auto;
+    background: #1c1c1e;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    border: 1px solid #333;
+    position: relative;
+  }
+
+  .chat-header {
+    background: linear-gradient(180deg, #2c2c2e 0%, #1c1c1e 100%);
+    padding: 14px 18px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .chat-back {
+    color: #5ac8fa;
+    font-size: 22px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .chat-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #4a3a26;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    overflow: hidden;
+    position: relative;
+  }
+  .chat-name {
+    color: #fff;
+    font-family: -apple-system, system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  .chat-name small {
+    color: #8e8e93;
+    font-weight: 400;
+    font-size: 12px;
+  }
+
+  .chat-messages {
+    height: 540px;
+    overflow-y: auto;
+    padding: 14px 12px;
+    background: #1c1c1e;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .chat-messages::-webkit-scrollbar { width: 6px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+  .msg-row {
+    display: flex;
+    margin: 2px 0;
+    animation: msg-in 0.3s ease;
+  }
+  @keyframes msg-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg-row.steve { justify-content: flex-start; }
+  .msg-row.du { justify-content: flex-end; }
+  .msg {
+    max-width: 75%;
+    padding: 9px 14px;
+    border-radius: 18px;
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.3;
+    word-wrap: break-word;
+  }
+  .msg-row.steve .msg {
+    background: #3a3a3c;
+    color: #fff;
+    border-bottom-left-radius: 4px;
+  }
+  .msg-row.du .msg {
+    background: #007aff;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg-zeit {
+    text-align: center;
+    color: #8e8e93;
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 11px;
+    margin: 12px 0 8px;
+    font-weight: 600;
+  }
+
+  .typing {
+    background: #3a3a3c;
+    padding: 12px 16px;
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    display: inline-flex;
+    gap: 4px;
+    align-self: flex-start;
+  }
+  .typing span {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #999;
+    animation: typing 1.2s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+
+  .antworten {
+    padding: 12px;
+    background: #2c2c2e;
+    border-top: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .antwort-btn {
+    background: #1c1c1e;
+    color: #fff;
+    border: 1px solid #007aff;
+    border-radius: 20px;
+    padding: 12px 18px;
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+  }
+  .antwort-btn:hover { background: #007aff; }
+  .antwort-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* meetup loading + ankunft */
+  .meetup-screen {
+    padding: 30px 24px;
+    text-align: center;
+    font-family: 'Anton', sans-serif;
+    color: #fff;
+    min-height: 540px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+  }
+  .meetup-loading {
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #ffe600;
+  }
+  .meetup-loading .dot {
+    display: inline-block;
+    animation: dot 1.4s infinite;
+  }
+  .meetup-loading .dot:nth-child(2) { animation-delay: 0.2s; }
+  .meetup-loading .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dot {
+    0%, 60%, 100% { opacity: 0.2; }
+    30% { opacity: 1; }
+  }
+
+  .meetup-ort {
+    background: rgba(255, 230, 0, 0.05);
+    border: 1px solid #4a3a26;
+    padding: 24px;
+    border-radius: 12px;
+    width: 100%;
+    margin-top: 14px;
+  }
+  .meetup-ort .ort {
+    font-family: 'Caveat', cursive;
+    font-size: 26px;
+    color: #c9a85a;
+    margin-bottom: 4px;
+  }
+  .meetup-ort .zeit {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: #8e8e93;
+    letter-spacing: 2px;
+  }
+
+  .vermisst-banner {
+    background: #b8000f;
+    color: #fff;
+    padding: 14px 18px;
+    margin: 20px -24px 0;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 4px;
+    font-size: 22px;
+    border-top: 4px solid #000;
+    border-bottom: 4px solid #000;
+    animation: blink-alarm 1.5s infinite;
+  }
+  @keyframes blink-alarm {
+    0%, 60%, 100% { background: #b8000f; }
+    30% { background: #7a0008; }
+  }
+
+  .vermisst-details {
+    background: #fff8e8;
+    color: #1a1410;
+    padding: 20px;
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+    text-align: left;
+    line-height: 1.5;
+    border: 2px solid #1a1410;
+    margin: 0 -24px;
+    box-shadow: inset 0 0 0 1px #c9a85a;
+    width: calc(100% + 48px);
+  }
+  .vermisst-details h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #1a1410;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    color: #b8000f;
+  }
+  .vermisst-details .feld {
+    margin-bottom: 6px;
+  }
+  .vermisst-details .feld b {
+    display: inline-block;
+    width: 130px;
+    color: #8e8e93;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .nochmal {
+    background: #ffe600;
+    color: #1a1410;
+    border: 3px solid #1a1410;
+    padding: 14px 28px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 3px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 4px 4px 0 #000;
+  }
+  .nochmal:hover { background: #fff; }
+
+  .nav-back {
+    text-align: center;
+    margin: 30px 0;
+  }
+  .nav-back a {
+    color: #c9a85a;
+    text-decoration: none;
+    border: 1px solid #c9a85a;
+    padding: 8px 18px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 12px;
+    display: inline-block;
+    margin: 0 5px;
+  }
+  .nav-back a:hover { background: #c9a85a; color: #1a1410; }
+
+  .lauf-counter {
+    text-align: center;
+    color: #c9a85a;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    margin-top: 10px;
+    letter-spacing: 2px;
+  }
+
+  .meetup-ascii {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: #4a3a26;
+    line-height: 1;
+    white-space: pre;
+    margin: 16px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="gov-bar">
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/minigames/chat-steve — Konversations-Protokoll</span>
+  <span>HINWEIS: dies ist ein internes ermittlungs-tool</span>
+</div>
+
+<header class="behoerde">
+  <a href="../index.html" style="text-decoration:none;"><div class="wappen">K</div></a>
+  <h1>CHAT MIT STEVE
+    <small>OPERATION SCHNURRBART · LIVE-PROTOKOLL · MINIGAME #4</small>
+  </h1>
+  <div class="right">
+    <a href="index.html" style="color:#c9a85a; text-decoration:none; font-size:11px; letter-spacing:1px;">▸ MINIGAMES HUB</a>
+  </div>
+</header>
+
+<section class="hero" style="padding: 20px 20px 10px;">
+  <div class="leak-banner">DOSSIER #044-A · LAUFENDE ERMITTLUNG</div>
+  <h2 style="font-size: 38px;"><span class="red">CHAT</span> MIT STEVE</h2>
+  <div class="untertitel">vereinbart ein meetup mit steve. mehr braucht ihr nicht zu wissen.</div>
+</section>
+
+<div class="chat-app" id="app">
+  <div class="chat-header">
+    <span class="chat-back">‹</span>
+    <div class="chat-avatar">🧔</div>
+    <div class="chat-name">Steve <small id="steve-status">online</small></div>
+  </div>
+  <div class="chat-messages" id="messages"></div>
+  <div class="antworten" id="antworten"></div>
+</div>
+
+<div class="lauf-counter" id="lauf-counter"></div>
+
+<div class="nav-back">
+  <a href="index.html">← MINIGAMES HUB</a>
+  <a href="../index.html">← AKTEN-ARCHIV</a>
+</div>
+
+<footer>
+  <h4>OPERATION SCHNURRBART · BEGV</h4>
+  <div class="disclaim">Alle Chats werden gewissenhaft mitgeschnitten und an Aclasher (admin) weitergeleitet.</div>
+  <div class="winzig">© 2026 BEGV · Steve hat die AGB nie unterschrieben</div>
+</footer>
+
+<script>
+// =================================================================
+// DIALOG-TREE
+// =================================================================
+const DIALOG = {
+  start: {
+    von: 'steve', text: 'ey alles gut?',
+    antworten: [
+      { text: 'ja klar, was geht?', goto: 'a_freundlich' },
+      { text: 'wer bist du?',       goto: 'b_misstrauisch' }
+    ]
+  },
+
+  // ---------- PFAD A: FREUNDLICH ----------
+  a_freundlich: {
+    von: 'steve', text: 'läuft. hab dir was zu zeigen. lust auf treffen?',
+    antworten: [
+      { text: 'ja safe, wann?',          goto: 'meetup_vorschlag_bahnhof' },
+      { text: 'was hast denn zu zeigen?', goto: 'a_was' }
+    ]
+  },
+  a_was: {
+    von: 'steve', text: 'etwas. zu krass für chat. vertrau mir.',
+    antworten: [
+      { text: 'okay wann?',         goto: 'meetup_vorschlag_acer' },
+      { text: 'klingt sketchy.',    goto: 'a_sketchy' }
+    ]
+  },
+  a_sketchy: {
+    von: 'steve', text: 'ist es nicht. ich bin steve. nicht jughead.',
+    antworten: [
+      { text: 'haha okay. bin dabei.', goto: 'meetup_vorschlag_bambiland' },
+      { text: 'wer ist jughead?',      goto: 'a_jughead' }
+    ]
+  },
+  a_jughead: {
+    von: 'steve', text: 'lol egal. willst du jetzt treffen oder nicht.',
+    antworten: [
+      { text: 'ja schon. wo?',       goto: 'meetup_vorschlag_bunker' },
+      { text: 'eher nicht doch.',    goto: 'rueckzieher' }
+    ]
+  },
+
+  // ---------- PFAD B: MISSTRAUISCH ----------
+  b_misstrauisch: {
+    von: 'steve', text: 'kennst mich. ist auch egal. ich habs eilig. treffen?',
+    antworten: [
+      { text: 'okay wann?',          goto: 'meetup_vorschlag_bahnhof' },
+      { text: 'klingt fishy.',       goto: 'b_fishy' }
+    ]
+  },
+  b_fishy: {
+    von: 'steve', text: 'ist es nicht. ich erklärs persönlich. ja?',
+    antworten: [
+      { text: 'okay dann ja',        goto: 'meetup_vorschlag_acer' },
+      { text: 'nein eher nicht',     goto: 'b_drueck' }
+    ]
+  },
+  b_drueck: {
+    von: 'steve', text: 'bitte. es ist wichtig. wirklich.',
+    antworten: [
+      { text: 'na gut. wo?',         goto: 'meetup_vorschlag_bambiland' },
+      { text: 'nein heißt nein',     goto: 'rueckzieher' }
+    ]
+  },
+
+  // ---------- MEETUP-VORSCHLÄGE ----------
+  meetup_vorschlag_bahnhof: {
+    von: 'steve', text: 'bahnhofsplatz köln. freitag 21 uhr. passt?',
+    antworten: [
+      { text: 'passt, bin da.',                goto: 'meetup_confirm', ort: 'bahnhof' },
+      { text: 'wo genau am bahnhofsplatz?',    goto: 'meetup_detail_bahnhof' }
+    ]
+  },
+  meetup_detail_bahnhof: {
+    von: 'steve', text: 'beim dönerladen wo safti immer steht. weißt schon.',
+    antworten: [
+      { text: 'ah safti. ja klar. bin da.', goto: 'meetup_confirm', ort: 'bahnhof' },
+      { text: 'safti? wer ist safti.',      goto: 'meetup_confirm', ort: 'bahnhof' }
+    ]
+  },
+
+  meetup_vorschlag_acer: {
+    von: 'steve', text: 'acer-stuhl-werk, hintereingang. heute 23 uhr. ok?',
+    antworten: [
+      { text: 'okay bin da.',                  goto: 'meetup_confirm', ort: 'acer' },
+      { text: 'wieso so spät?',                goto: 'meetup_detail_acer' }
+    ]
+  },
+  meetup_detail_acer: {
+    von: 'steve', text: 'frag nicht. der stuhl darf das nicht sehen.',
+    antworten: [
+      { text: 'der stuhl?',                    goto: 'meetup_confirm', ort: 'acer' },
+      { text: 'ok ich frag nicht.',            goto: 'meetup_confirm', ort: 'acer' }
+    ]
+  },
+
+  meetup_vorschlag_bambiland: {
+    von: 'steve', text: 'bambiland-eingang. sonntag mittag. komm allein.',
+    antworten: [
+      { text: 'klar. allein. bin da.',         goto: 'meetup_confirm', ort: 'bambiland' },
+      { text: 'wieso allein?',                 goto: 'meetup_detail_bambiland' }
+    ]
+  },
+  meetup_detail_bambiland: {
+    von: 'steve', text: 'die rehe werden nervös bei gruppen.',
+    antworten: [
+      { text: '...okay. allein. bin da.',      goto: 'meetup_confirm', ort: 'bambiland' },
+      { text: 'das ergibt keinen sinn',        goto: 'meetup_confirm', ort: 'bambiland' }
+    ]
+  },
+
+  meetup_vorschlag_bunker: {
+    von: 'steve', text: 'bunker 7, kellergeschoss. morgen 03:00. nicht klingeln.',
+    antworten: [
+      { text: 'verstanden. bin da.',           goto: 'meetup_confirm', ort: 'bunker' },
+      { text: 'morgen 3 uhr morgens?!',        goto: 'meetup_detail_bunker' }
+    ]
+  },
+  meetup_detail_bunker: {
+    von: 'steve', text: 'jughead schläft dann. sonst geht nicht.',
+    antworten: [
+      { text: 'na gut. bin da.',               goto: 'meetup_confirm', ort: 'bunker' },
+      { text: 'jughead? schon wieder.',        goto: 'meetup_confirm', ort: 'bunker' }
+    ]
+  },
+
+  // ---------- CONFIRM (vor dem twist) ----------
+  meetup_confirm: {
+    von: 'steve', text: 'top. bis dann. nimm nichts mit was leuchtet.',
+    antworten: [
+      { text: 'warum?',                        goto: 'meetup_warum' },
+      { text: 'okay bin auf dem weg',          goto: 'AUF_DEM_WEG' }
+    ]
+  },
+  meetup_warum: {
+    von: 'steve', text: 'frag nicht. komm einfach.',
+    antworten: [
+      { text: 'okay bin auf dem weg',          goto: 'AUF_DEM_WEG' }
+    ]
+  },
+
+  // ---------- RÜCKZIEHER ----------
+  rueckzieher: {
+    von: 'steve', text: 'schade. dachte du verstehst.',
+    antworten: [
+      { text: 'doch okay, treffen?',           goto: 'meetup_vorschlag_bunker' },
+      { text: 'tut mir leid, nein.',           goto: 'rueckzieher_ende' }
+    ]
+  },
+  rueckzieher_ende: {
+    von: 'steve', text: 'ok. ich melde mich nie wieder.',
+    antworten: [
+      { text: 'verstehe.',                     goto: 'WEG' }
+    ]
+  }
+};
+
+// =================================================================
+// MEETUP-ENDPUNKTE
+// =================================================================
+const MEETUPS = {
+  bahnhof: {
+    ort: 'Bahnhofsplatz Köln',
+    zeit: 'Freitag, 21:00',
+    ascii:
+`     ___________________
+    |   [BAHNHOF]      |
+    |   .            . |
+    |        ?         |
+    |__________________|
+       (niemand da)`,
+    flavor: 'Ein einsamer Döner liegt auf der Straße. Niemand isst ihn. Niemand hat ihn bestellt.',
+    letzteNachricht: 'bin gleich da',
+    seit: '12 Minuten'
+  },
+  acer: {
+    ort: 'Acer-Stuhl-Werk, Hintereingang',
+    zeit: 'Heute, 23:00',
+    ascii:
+`       _________________
+      |   [WERK]        |
+      |   ___           |
+      |  |   |          |
+      |  | ? |          |
+      |  |___|  *knarz*  |
+      |_________________|`,
+    flavor: 'Der Hintereingang ist offen. Drinnen knarzt ein Acer-Stuhl. Steve ist nicht zu sehen. Der Stuhl wirkt nervös.',
+    letzteNachricht: 'der stuhl darf das nicht sehen',
+    seit: '47 Minuten'
+  },
+  bambiland: {
+    ort: 'Bambiland-Eingang',
+    zeit: 'Sonntag, 12:00',
+    ascii:
+`       *  .  *  .  *
+      .  __________  .
+      ( BAMBILAND )
+      .                .
+      *    ?  🦌  *  *
+        (rehe schauen weg)`,
+    flavor: 'Die Rehe wirken angespannt. Ein Schmetterling landet auf einer Bank, auf der niemand sitzt. Steve ist nicht da.',
+    letzteNachricht: 'komm allein',
+    seit: '2 Stunden 4 Minuten'
+  },
+  bunker: {
+    ort: 'Bunker 7, Kellergeschoss',
+    zeit: 'Morgen, 03:00',
+    ascii:
+`       ▓▓▓▓▓▓▓▓▓▓▓▓▓
+       ▓ BUNKER 7  ▓
+       ▓           ▓
+       ▓     ?     ▓
+       ▓           ▓
+       ▓▓▓▓▓▓▓▓▓▓▓▓▓`,
+    flavor: 'Die Tür war unverschlossen. Drinnen ist es dunkel. Jughead schläft im Nebenraum und reagiert nicht. Steve ist nicht da. Aber irgendwo knarzt ein Stuhl.',
+    letzteNachricht: 'jughead schläft dann',
+    seit: '4 Minuten'
+  }
+};
+
+const VERMISST_FLAVOR_ZUSATZ = [
+  'Hinweis: Es liegen Berichte vor, dass Steve identisch mit "Kurzhaarmeister" sei.',
+  'Hinweis: Letzte digitale Spur führt zu einem 48H-Battle-Streaming-Setup.',
+  'Hinweis: Steve hat keine bekannten Verwandten. Außer vielleicht Kurzhaarmeister.',
+  'Hinweis: Auf dem Boden liegen Schnurrbart-Härchen. Forensik läuft.',
+  'Hinweis: Steve wurde zuletzt mit 732 Demons gesehen.',
+  'Hinweis: Die letzte Nachricht wurde via Bunker-7-Server geroutet. Aclasher (admin) untersucht.'
+];
+
+// =================================================================
+// CHAT-LOGIC
+// =================================================================
+const $msg = document.getElementById('messages');
+const $ant = document.getElementById('antworten');
+const $status = document.getElementById('steve-status');
+
+let aktuellerOrt = null;
+const laeufe = parseInt(localStorage.getItem('chat-steve-laeufe') || '0', 10);
+document.getElementById('lauf-counter').textContent = laeufe > 0 ? `bisherige meetups: ${laeufe} · steve weiter vermisst` : '';
+
+function tippt() {
+  const row = document.createElement('div');
+  row.className = 'msg-row steve typing-row';
+  row.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  $msg.appendChild(row);
+  $msg.scrollTop = $msg.scrollHeight;
+  return row;
+}
+function entferneTipp() {
+  const t = document.querySelector('.typing-row');
+  if (t) t.remove();
+}
+
+function sendeNachricht(von, text) {
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + von;
+  const m = document.createElement('div');
+  m.className = 'msg';
+  m.textContent = text;
+  row.appendChild(m);
+  $msg.appendChild(row);
+  $msg.scrollTop = $msg.scrollHeight;
+}
+
+function rendereAntworten(antworten) {
+  $ant.innerHTML = '';
+  antworten.forEach(a => {
+    const b = document.createElement('button');
+    b.className = 'antwort-btn';
+    b.textContent = a.text;
+    b.addEventListener('click', () => waehleAntwort(a));
+    $ant.appendChild(b);
+  });
+}
+
+function waehleAntwort(antwort) {
+  // disable alle buttons
+  $ant.querySelectorAll('.antwort-btn').forEach(b => b.disabled = true);
+  sendeNachricht('du', antwort.text);
+  if (antwort.ort) aktuellerOrt = antwort.ort;
+
+  setTimeout(() => {
+    if (antwort.goto === 'AUF_DEM_WEG') return zeigeWeg();
+    if (antwort.goto === 'WEG') return steveWeg();
+    gehe(antwort.goto);
+  }, 600);
+}
+
+function gehe(knotenId) {
+  const k = DIALOG[knotenId];
+  if (!k) return console.error('unbekannter knoten:', knotenId);
+  $status.textContent = 'tippt...';
+  $ant.innerHTML = '';
+  const tipp = tippt();
+  // tipp-zeit basierend auf textlänge
+  const wartezeit = Math.min(2200, 600 + k.text.length * 28);
+  setTimeout(() => {
+    entferneTipp();
+    sendeNachricht('steve', k.text);
+    $status.textContent = 'online';
+    rendereAntworten(k.antworten);
+  }, wartezeit);
+}
+
+function zeigeWeg() {
+  $status.textContent = 'online';
+  $ant.innerHTML = '';
+  setTimeout(() => sendeNachricht('steve', 'top. bis gleich.'), 500);
+  setTimeout(() => {
+    document.querySelector('.chat-app').innerHTML = `
+      <div class="meetup-screen">
+        <div class="meetup-loading">AUF DEM WEG ZUM TREFFEN<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
+        <div class="meetup-ort">
+          <div class="ort">${MEETUPS[aktuellerOrt].ort}</div>
+          <div class="zeit">${MEETUPS[aktuellerOrt].zeit}</div>
+        </div>
+        <div style="margin-top:14px; font-family:'Caveat',cursive; color:#8e8e93; font-size:18px;">
+          du fährst los...
+        </div>
+      </div>`;
+    setTimeout(zeigeAnkunft, 3500);
+  }, 1500);
+}
+
+function zeigeAnkunft() {
+  const m = MEETUPS[aktuellerOrt];
+  const zusatzHinweis = VERMISST_FLAVOR_ZUSATZ[Math.floor(Math.random() * VERMISST_FLAVOR_ZUSATZ.length)];
+  localStorage.setItem('chat-steve-laeufe', laeufe + 1);
+
+  document.querySelector('.chat-app').innerHTML = `
+    <div class="meetup-screen">
+      <div style="font-family:'Caveat',cursive; font-size:22px; color:#c9a85a;">DU BIST DA.</div>
+      <div class="meetup-ort">
+        <div class="ort">${m.ort}</div>
+        <div class="zeit">${m.zeit}</div>
+      </div>
+      <div class="meetup-ascii">${m.ascii}</div>
+      <div style="font-family:'Special Elite',monospace; font-size:14px; color:#c9a85a; margin-top:8px;">
+        ${m.flavor}
+      </div>
+
+      <div class="vermisst-banner">⚠ STEVE GILT ALS VERMISST</div>
+
+      <div class="vermisst-details">
+        <h3>FAHNDUNGSAUFNAHME · BEGV</h3>
+        <div class="feld"><b>Name:</b> Steve (= Kurzhaarmeister)</div>
+        <div class="feld"><b>Letzte Sichtung:</b> nie</div>
+        <div class="feld"><b>Letzter Aufenthaltsort:</b> ${m.ort}</div>
+        <div class="feld"><b>Geplante Zeit:</b> ${m.zeit}</div>
+        <div class="feld"><b>Vermisst seit:</b> ${m.seit}</div>
+        <div class="feld"><b>Letzte Nachricht:</b> "${m.letzteNachricht}"</div>
+        <div class="feld"><b>Erscheinungsbild:</b> Schnurrbart, sonst nichts spezifisches</div>
+        <hr style="margin: 10px 0; border: none; border-top: 1px dashed #999;">
+        <div style="font-style: italic;">${zusatzHinweis}</div>
+        <hr style="margin: 10px 0; border: none; border-top: 1px dashed #999;">
+        <div><b>Aktenzeichen:</b> BEGV-STEVE-VERMISST-${laeufe + 1}</div>
+        <div><b>Untersuchung läuft seit:</b> 0 Sekunden</div>
+        <div><b>Bearbeitet durch:</b> Jughead (schläft)</div>
+      </div>
+
+      <button class="nochmal" onclick="location.reload()">🔄 NOCHMAL VERSUCHEN</button>
+      <div style="font-family:'Caveat',cursive; color:#666; font-size:14px; margin-top: 8px;">
+        (es endet immer gleich. aber probier ruhig.)
+      </div>
+    </div>`;
+  // status oben aktualisieren
+  const headerStatus = document.querySelectorAll('.chat-app .chat-name small');
+  if (headerStatus[0]) headerStatus[0].textContent = 'vermisst';
+}
+
+function steveWeg() {
+  $status.textContent = 'offline · vermisst';
+  setTimeout(() => {
+    sendeNachricht('steve', 'ok. ich melde mich nie wieder.');
+    setTimeout(() => {
+      const row = document.createElement('div');
+      row.className = 'msg-zeit';
+      row.textContent = 'Steve hat den Chat verlassen';
+      $msg.appendChild(row);
+      $msg.scrollTop = $msg.scrollHeight;
+
+      $ant.innerHTML = `
+        <div style="text-align:center; padding: 20px; color:#8e8e93; font-family:-apple-system, system-ui, sans-serif; font-size: 14px;">
+          steve wurde danach nie wieder gesehen.<br><br>
+          <button class="nochmal" onclick="location.reload()">🔄 NOCHMAL VERSUCHEN</button>
+        </div>`;
+    }, 1500);
+  }, 800);
+}
+
+// =================================================================
+// START
+// =================================================================
+const zeit = document.createElement('div');
+zeit.className = 'msg-zeit';
+const datum = new Date();
+const tag = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'][datum.getDay()];
+const stunden = String(datum.getHours()).padStart(2,'0');
+const minuten = String(datum.getMinutes()).padStart(2,'0');
+zeit.textContent = `Heute · ${tag} ${stunden}:${minuten}`;
+$msg.appendChild(zeit);
+
+setTimeout(() => gehe('start'), 600);
+
+// console
+console.log('%c💬 CHAT MIT STEVE', 'background:#007aff; color:#fff; padding:8px 16px; font-size:16px; font-weight:bold;');
+console.log('%cspoiler: er ist immer weg. egal welchen pfad du wählst.', 'color:#666; font-size:11px; font-style:italic;');
+</script>
+</body>
+</html>

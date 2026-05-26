@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIC TAC TOE vs TRIPLE-T — BEGV Minigames</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body {
+    background: linear-gradient(180deg, #1a1410 0%, #0a0807 100%) !important;
+    min-height: 100vh;
+  }
+
+  .ttt-wrap {
+    max-width: 560px;
+    margin: 30px auto;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .gegner-box {
+    background: rgba(0,0,0,0.5);
+    border: 2px solid #c9a85a;
+    padding: 18px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .gegner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .gegner-avatar {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+    border: 3px solid #4a3a26;
+  }
+  .gegner.du .gegner-avatar { background: #007aff; color: #fff; border-color: #007aff; }
+  .gegner.t3 .gegner-avatar {
+    background: linear-gradient(135deg, #8b4513 0%, #4a2a08 100%);
+    color: #fff;
+    border-color: #c9a85a;
+  }
+  .gegner-info {
+    text-align: left;
+    color: #ffe600;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 14px;
+  }
+  .gegner-info small {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    color: #c9a85a;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    font-weight: normal;
+  }
+  .gegner.aktiv .gegner-avatar {
+    box-shadow: 0 0 24px currentColor;
+    animation: spielt 0.5s infinite alternate;
+  }
+  @keyframes spielt {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+  }
+  .vs {
+    font-family: 'Anton', sans-serif;
+    color: #ff3a8c;
+    font-size: 24px;
+    letter-spacing: 3px;
+  }
+
+  .score {
+    background: #1a0805;
+    border: 2px solid #c9a85a;
+    padding: 10px 18px;
+    color: #ffe600;
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+    letter-spacing: 1px;
+  }
+  .score b { color: #ffe600; font-family: 'Anton', sans-serif; font-size: 20px; }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    max-width: 400px;
+    aspect-ratio: 1;
+    margin: 0 auto;
+    background: #c9a85a;
+    padding: 6px;
+    border: 4px solid #c9a85a;
+    box-shadow: 0 0 30px rgba(201, 168, 90, 0.4);
+  }
+  .zelle {
+    background: #1a1410;
+    display: grid;
+    place-items: center;
+    font-size: clamp(40px, 12vw, 80px);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    line-height: 1;
+  }
+  .zelle:hover { background: #2a221a; }
+  .zelle.belegt { cursor: not-allowed; }
+  .zelle.gewinn {
+    background: #1a8a2c !important;
+    animation: gewinn-blink 0.5s infinite alternate;
+  }
+  @keyframes gewinn-blink {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); box-shadow: inset 0 0 30px rgba(255,255,255,0.4); }
+  }
+
+  .status-text {
+    margin: 20px 0;
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #ffe600;
+    min-height: 30px;
+  }
+
+  .roast-box {
+    background: linear-gradient(135deg, #2a1015 0%, #1a0805 100%);
+    border: 3px solid #b8000f;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 500px;
+    color: #fff;
+    font-family: 'Special Elite', monospace;
+    font-size: 16px;
+    box-shadow: 0 0 30px rgba(184, 0, 15, 0.4);
+    text-align: left;
+  }
+  .roast-box.gewinn { border-color: #2bff52; box-shadow: 0 0 30px rgba(43, 255, 82, 0.4); }
+  .roast-box.draw   { border-color: #ffe600; box-shadow: 0 0 30px rgba(255, 230, 0, 0.3); }
+  .roast-box .quelle {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: #c9a85a;
+    letter-spacing: 1.5px;
+    margin-top: 10px;
+  }
+
+  .nochmal-btn {
+    background: #ffe600;
+    color: #1a1410;
+    border: 3px solid #1a1410;
+    padding: 14px 28px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 3px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #000;
+    margin: 6px 4px;
+  }
+  .nochmal-btn:hover { background: #fff; }
+  .nochmal-btn.danger { background: #b8000f; color: #fff; }
+
+  .nav-back {
+    text-align: center;
+    margin: 30px 0;
+  }
+  .nav-back a {
+    color: #c9a85a;
+    text-decoration: none;
+    border: 1px solid #c9a85a;
+    padding: 8px 18px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 12px;
+    display: inline-block;
+    margin: 0 5px;
+  }
+  .nav-back a:hover { background: #c9a85a; color: #1a1410; }
+</style>
+</head>
+<body>
+
+<div class="gov-bar">
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/minigames/tictactoe — Strategisches Duell</span>
+  <span>Triple-T spielt mit Minimax. Du nicht.</span>
+</div>
+
+<header class="behoerde">
+  <a href="../index.html" style="text-decoration:none;"><div class="wappen">K</div></a>
+  <h1>TIC TAC TOE
+    <small>OFFIZIELLES DUELL · DU vs TRIPLE-T (BOT) · MINIGAME #6</small>
+  </h1>
+  <div class="right">
+    <a href="index.html" style="color:#c9a85a; text-decoration:none; font-size:11px; letter-spacing:1px;">▸ MINIGAMES HUB</a>
+  </div>
+</header>
+
+<div class="ttt-wrap">
+  <div class="gegner-box">
+    <div class="gegner du" id="g-du">
+      <div class="gegner-avatar">⭕</div>
+      <div class="gegner-info">DU<small>(amateur)</small></div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="gegner t3 aktiv" id="g-t3">
+      <div class="gegner-avatar">🪵</div>
+      <div class="gegner-info">TRIPLE-T<small>(= tung tung tung sahur)</small></div>
+    </div>
+  </div>
+
+  <div class="score">
+    <div>DU: <b id="score-du">0</b></div>
+    <div>UNENTSCHIEDEN: <b id="score-draw">0</b></div>
+    <div>TRIPLE-T: <b id="score-t3">0</b></div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <div class="status-text" id="status">triple-t fängt an (mit holz)</div>
+
+  <div id="roast-container"></div>
+
+  <button class="nochmal-btn" id="reset-btn" style="display:none;">🔄 NEUE RUNDE</button>
+  <button class="nochmal-btn danger" id="reset-all-btn">⚠ ALLES ZURÜCKSETZEN</button>
+</div>
+
+<div class="nav-back">
+  <a href="index.html">← MINIGAMES HUB</a>
+  <a href="../index.html">← AKTEN-ARCHIV</a>
+</div>
+
+<footer>
+  <h4>TIC TAC TOE · BEGV</h4>
+  <div class="disclaim">Triple-T verwendet Minimax-Algorithmus. Du verwendest deine intuition. Eine seite wird gewinnen.</div>
+  <div class="winzig">© 2026 BEGV · Holz vs Strategie · Spoiler: das Holz gewinnt</div>
+</footer>
+
+<script>
+// =================================================================
+// TIC TAC TOE vs TRIPLE-T
+// =================================================================
+const $board = document.getElementById('board');
+const $status = document.getElementById('status');
+const $resetBtn = document.getElementById('reset-btn');
+const $gDu = document.getElementById('g-du');
+const $gT3 = document.getElementById('g-t3');
+
+const SPIELER = { du: 'du', t3: 't3' };
+const SYMBOLE = { du: '⭕', t3: '🪵' };
+
+let brett = []; // 9 zellen, null oder 'du'/'t3'
+let amZug = 't3';   // triple-t fängt immer an (er hat aura)
+let beendet = false;
+
+const score = {
+  du: parseInt(localStorage.getItem('ttt-du')||'0', 10),
+  draw: parseInt(localStorage.getItem('ttt-draw')||'0', 10),
+  t3: parseInt(localStorage.getItem('ttt-t3')||'0', 10)
+};
+function rendereScore() {
+  document.getElementById('score-du').textContent = score.du;
+  document.getElementById('score-draw').textContent = score.draw;
+  document.getElementById('score-t3').textContent = score.t3;
+  localStorage.setItem('ttt-du', score.du);
+  localStorage.setItem('ttt-draw', score.draw);
+  localStorage.setItem('ttt-t3', score.t3);
+}
+
+function neueRunde() {
+  brett = new Array(9).fill(null);
+  beendet = false;
+  amZug = 't3'; // triple-t startet immer
+  $resetBtn.style.display = 'none';
+  document.getElementById('roast-container').innerHTML = '';
+  rendere();
+  $status.textContent = 'triple-t fängt an (mit holz)';
+  $gT3.classList.add('aktiv');
+  $gDu.classList.remove('aktiv');
+  setTimeout(triplBotZug, 800);
+}
+
+function rendere() {
+  $board.innerHTML = '';
+  brett.forEach((wert, i) => {
+    const z = document.createElement('div');
+    z.className = 'zelle';
+    if (wert) {
+      z.classList.add('belegt');
+      z.textContent = SYMBOLE[wert];
+    }
+    z.addEventListener('click', () => spielerZug(i));
+    $board.appendChild(z);
+  });
+}
+
+function spielerZug(idx) {
+  if (beendet || brett[idx] || amZug !== 'du') return;
+  brett[idx] = 'du';
+  rendere();
+  if (pruefEnde()) return;
+  amZug = 't3';
+  $gT3.classList.add('aktiv');
+  $gDu.classList.remove('aktiv');
+  $status.textContent = 'triple-t denkt nach (mit holz)...';
+  setTimeout(triplBotZug, 600 + Math.random()*500);
+}
+
+function triplBotZug() {
+  if (beendet) return;
+  const idx = bestesZug('t3');
+  brett[idx] = 't3';
+  rendere();
+  if (pruefEnde()) return;
+  amZug = 'du';
+  $gDu.classList.add('aktiv');
+  $gT3.classList.remove('aktiv');
+  $status.textContent = 'du bist dran ⭕';
+}
+
+// MINIMAX (unschlagbarer bot)
+function bestesZug(spieler) {
+  let beste = -Infinity, zug = -1;
+  for (let i = 0; i < 9; i++) {
+    if (brett[i] === null) {
+      brett[i] = spieler;
+      const score = minimax(brett, 0, false, spieler);
+      brett[i] = null;
+      if (score > beste) { beste = score; zug = i; }
+    }
+  }
+  return zug;
+}
+function minimax(b, depth, isMax, fuer) {
+  const gegen = fuer === 't3' ? 'du' : 't3';
+  const winner = gewinner(b);
+  if (winner === fuer) return 10 - depth;
+  if (winner === gegen) return depth - 10;
+  if (!b.includes(null)) return 0;
+  if (isMax) {
+    let best = -Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (b[i] === null) {
+        b[i] = fuer;
+        best = Math.max(best, minimax(b, depth+1, false, fuer));
+        b[i] = null;
+      }
+    }
+    return best;
+  } else {
+    let best = Infinity;
+    for (let i = 0; i < 9; i++) {
+      if (b[i] === null) {
+        b[i] = gegen;
+        best = Math.min(best, minimax(b, depth+1, true, fuer));
+        b[i] = null;
+      }
+    }
+    return best;
+  }
+}
+
+const WIN_LINES = [
+  [0,1,2],[3,4,5],[6,7,8], // zeilen
+  [0,3,6],[1,4,7],[2,5,8], // spalten
+  [0,4,8],[2,4,6]          // diagonalen
+];
+function gewinner(b) {
+  for (const l of WIN_LINES) {
+    if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[1]] === b[l[2]]) return b[l[0]];
+  }
+  return null;
+}
+function gewinnLinie(b) {
+  for (const l of WIN_LINES) {
+    if (b[l[0]] && b[l[0]] === b[l[1]] && b[l[1]] === b[l[2]]) return l;
+  }
+  return null;
+}
+
+function pruefEnde() {
+  const win = gewinner(brett);
+  const linie = gewinnLinie(brett);
+  if (linie) {
+    linie.forEach(i => $board.children[i].classList.add('gewinn'));
+  }
+  if (win) {
+    beendet = true;
+    $gDu.classList.remove('aktiv');
+    $gT3.classList.remove('aktiv');
+    if (win === 'du') {
+      score.du++;
+      $status.textContent = '✓ DU HAST GEWONNEN?!';
+      zeigeRoast('gewonnen');
+    } else {
+      score.t3++;
+      $status.textContent = '✗ TRIPLE-T HAT GEWONNEN';
+      zeigeRoast('verloren');
+    }
+    rendereScore();
+    $resetBtn.style.display = 'inline-block';
+    return true;
+  }
+  if (!brett.includes(null)) {
+    beendet = true;
+    score.draw++;
+    $status.textContent = '🟰 UNENTSCHIEDEN';
+    zeigeRoast('unentschieden');
+    rendereScore();
+    $resetBtn.style.display = 'inline-block';
+    return true;
+  }
+  return false;
+}
+
+const ROASTS_VERLOREN = [
+  "verloren gegen einen bot. einen bot mit holz. die schande ist real.",
+  "tung tung tung sahur. du wurdest geholzt.",
+  "triple-t hat dich mit minimax besiegt. du hattest nicht mal max.",
+  "der italienische brainrot war stärker als deine strategie.",
+  "selbst captain carry hätte besser gespielt — und der ist in pension.",
+  "9 felder. unendlich viele schlechte entscheidungen. respekt für die effizienz.",
+  "das holz hat dich besiegt. nicht der spieler. das holz.",
+  "triple-t spielt mit einem algorithmus aus den 50ern. du spielst mit deinem bauchgefühl. ergebnis erwartbar.",
+  "jughead wäre stolz. (er ist nicht stolz. er ist weggeweht.)",
+  "deine niederlage wurde aclasher (admin) gemeldet. er hat nur 'naja' gesagt.",
+  "der acer-stuhl hat zugesehen. er hat sich beschwert. nicht über triple-t.",
+  "selbst plexi mit aktiver ELE SPONGEBOB hätte fokussierter gespielt."
+];
+const ROASTS_DRAW = [
+  "unentschieden gegen einen perfekten bot. das ist der bestmögliche outcome — und trotzdem keine echte leistung.",
+  "draw. das ist tic tac toe. ein draw ist DAS spiel. du hast genau das mindeste getan.",
+  "ein remis. triple-t hat dich respektiert. ein bisschen.",
+  "okay. das war nicht peinlich. nur durchschnittlich. wie der rest deines lebens.",
+  "unentschieden. wie deine entscheidung gerade auf dieser seite zu sein."
+];
+const ROASTS_GEWONNEN = [
+  "haha. das war ein bug. triple-t wird patch v1.1 einspielen.",
+  "du hast gewonnen?! nicht möglich. aclasher (admin) untersucht das.",
+  "WARNUNG: anomalie detektiert. triple-t wird neu kalibriert.",
+  "sieg eingetragen. unter 'glücksstreffer / vermutlich bug'.",
+  "du hast gewonnen. gegen einen minimax-bot. das ist statistisch unmöglich. wir sind beeindruckt. und besorgt."
+];
+
+function zeigeRoast(typ) {
+  let liste, klass;
+  if (typ === 'verloren') { liste = ROASTS_VERLOREN; klass = ''; }
+  else if (typ === 'unentschieden') { liste = ROASTS_DRAW; klass = 'draw'; }
+  else { liste = ROASTS_GEWONNEN; klass = 'gewinn'; }
+  const text = liste[Math.floor(Math.random()*liste.length)];
+  const c = document.getElementById('roast-container');
+  c.innerHTML = `
+    <div class="roast-box ${klass}">
+      "${text}"
+      <div class="quelle">— SananenBaft, anlässlich des spielergebnisses</div>
+    </div>`;
+}
+
+$resetBtn.addEventListener('click', neueRunde);
+document.getElementById('reset-all-btn').addEventListener('click', () => {
+  if (!confirm('alle stats zurücksetzen?')) return;
+  score.du = score.draw = score.t3 = 0;
+  rendereScore();
+  neueRunde();
+});
+
+rendereScore();
+neueRunde();
+
+console.log('%c✊ TIC TAC TOE vs TRIPLE-T', 'background:#8b4513; color:#fff; padding:8px 16px; font-size:16px; font-weight:bold;');
+console.log('%ctriple-t verwendet minimax. der bot ist unschlagbar. das beste ist ein draw.', 'color:#c9a85a; font-size:11px;');
+</script>
+</body>
+</html>

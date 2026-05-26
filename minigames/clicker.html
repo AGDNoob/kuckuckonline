@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA-CLICKER — BEGV Minigames</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { background: radial-gradient(ellipse at center, #2a1015 0%, #0a0807 70%) !important; min-height: 100vh; }
+  .clicker-wrap {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+  }
+  @media (max-width: 840px) { .clicker-wrap { grid-template-columns: 1fr; } }
+
+  .aura-haupt {
+    background: rgba(0,0,0,0.5);
+    border: 4px solid #ff3a8c;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(255, 58, 140, 0.4);
+  }
+  .aura-zahl {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(48px, 10vw, 100px);
+    color: #ff3a8c;
+    text-shadow: 0 0 30px #ff3a8c, 4px 4px 0 #000;
+    letter-spacing: 4px;
+    line-height: 1;
+  }
+  .aura-label {
+    color: #c9a85a;
+    font-family: 'Courier Prime', monospace;
+    letter-spacing: 4px;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .aura-rate {
+    color: #ffe600;
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .aura-knopf {
+    margin: 36px auto 0;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffb0d0, #ff3a8c 50%, #b8005a 100%);
+    border: 6px solid #fff;
+    box-shadow: 0 0 60px rgba(255, 58, 140, 0.7), inset -10px -20px 40px rgba(0,0,0,0.4);
+    font-family: 'Anton', sans-serif;
+    color: #fff;
+    font-size: 36px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    user-select: none;
+    text-shadow: 3px 3px 0 #b8005a;
+    transition: transform 0.05s, box-shadow 0.2s;
+  }
+  .aura-knopf:hover { box-shadow: 0 0 90px rgba(255, 58, 140, 0.9), inset -10px -20px 40px rgba(0,0,0,0.4); }
+  .aura-knopf:active { transform: scale(0.93); }
+
+  .float-num {
+    position: absolute;
+    color: #ffe600;
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    pointer-events: none;
+    text-shadow: 2px 2px 0 #000;
+    animation: float-up 1s ease-out forwards;
+  }
+  @keyframes float-up {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-60px); }
+  }
+
+  .shop {
+    background: rgba(0,0,0,0.6);
+    border: 3px solid #c9a85a;
+    border-radius: 10px;
+    padding: 18px;
+    color: #c9a85a;
+  }
+  .shop h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    color: #ffe600;
+    letter-spacing: 3px;
+    border: none;
+    margin: 0 0 14px;
+    text-align: center;
+  }
+  .upgrade {
+    background: linear-gradient(135deg, #2a160c 0%, #1a0805 100%);
+    border: 2px solid #4a3a26;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .upgrade:hover { border-color: #ffe600; transform: translateX(-3px); }
+  .upgrade.kaputt { opacity: 0.4; cursor: not-allowed; }
+  .upgrade .name {
+    font-family: 'Anton', sans-serif;
+    color: #ffe600;
+    letter-spacing: 1.5px;
+    font-size: 14px;
+    display: block;
+  }
+  .upgrade .desc {
+    font-family: 'Special Elite', monospace;
+    color: #888;
+    font-size: 11px;
+    display: block;
+    margin-top: 2px;
+  }
+  .upgrade .preis {
+    font-family: 'Anton', sans-serif;
+    color: #ff3a8c;
+    font-size: 18px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+  .upgrade .besitz {
+    background: #ffe600;
+    color: #1a1410;
+    padding: 1px 8px;
+    font-family: 'Anton', sans-serif;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-size: 13px;
+  }
+
+  .stats-mini {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed #4a3a26;
+    color: #c9a85a;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+  }
+  .stats-mini b { color: #ffe600; }
+
+  .nav-back {
+    text-align: center;
+    margin: 30px 0;
+  }
+  .nav-back a {
+    color: #c9a85a;
+    text-decoration: none;
+    border: 1px solid #c9a85a;
+    padding: 8px 18px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 12px;
+    display: inline-block;
+    margin: 0 5px;
+  }
+  .nav-back a:hover { background: #c9a85a; color: #1a1410; }
+
+  .achievement-popup {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #ffe600 0%, #c49a00 100%);
+    color: #1a1410;
+    padding: 16px 22px;
+    border: 3px solid #1a1410;
+    border-radius: 6px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    z-index: 9999;
+    box-shadow: 4px 4px 0 #000;
+    max-width: 320px;
+    animation: slideInRight 0.4s, fadeOut 0.5s 4.5s forwards;
+  }
+  @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes fadeOut { to { opacity: 0; transform: translateX(50%); } }
+</style>
+</head>
+<body>
+
+<div class="gov-bar">
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/minigames/clicker — Aura-Generator</span>
+  <span>WARNUNG: aura-überdosis möglich</span>
+</div>
+
+<header class="behoerde">
+  <a href="../index.html" style="text-decoration:none;"><div class="wappen">K</div></a>
+  <h1>AURA-CLICKER
+    <small>WIE VIEL AURA HÄLTST DU AUS? — MINIGAME #1</small>
+  </h1>
+  <div class="right">
+    <a href="index.html" style="color:#c9a85a; text-decoration:none; font-size:11px; letter-spacing:1px;">▸ MINIGAMES HUB</a>
+  </div>
+</header>
+
+<div class="clicker-wrap">
+  <div class="aura-haupt">
+    <div class="aura-label">DEINE AURA</div>
+    <div class="aura-zahl" id="aura">0</div>
+    <div class="aura-rate"><span id="aps">0</span> aura/sekunde · klick: <b id="cps">1</b></div>
+    <button class="aura-knopf" id="knopf">+AURA</button>
+    <div style="margin-top: 20px; font-family:'Caveat',cursive; font-size:18px; color:#c9a85a;">
+      drück den knopf. öfter. immer öfter. das ist die ganze idee.
+    </div>
+  </div>
+
+  <div class="shop">
+    <h2>🛒 UPGRADES</h2>
+    <div id="upgrades"></div>
+    <div class="stats-mini">
+      <b id="stat-total">0</b> aura total verdient<br>
+      <b id="stat-clicks">0</b> klicks<br>
+      <b id="stat-zeit">0:00</b> spielzeit<br>
+      <button onclick="resetGame()" style="margin-top:10px; background:#b8000f; color:#fff; border:none; padding:6px 14px; font-family:'Anton',sans-serif; letter-spacing:2px; cursor:pointer; width:100%;">⚠ ZURÜCKSETZEN</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav-back">
+  <a href="index.html">← MINIGAMES HUB</a>
+  <a href="../index.html">← AKTEN-ARCHIV</a>
+  <a href="reaktion.html">→ NÄCHSTES SPIEL</a>
+</div>
+
+<script>
+const UPGRADES = [
+  { id:'click1', name:'PINKE KOPFHÖRER', desc:'+1 aura pro klick', kosten:10, kostenWachs:1.3, art:'klick', wert:1 },
+  { id:'click2', name:'ACER-STUHL', desc:'+5 aura pro klick', kosten:100, kostenWachs:1.4, art:'klick', wert:5 },
+  { id:'click3', name:'MONSTER WHITE', desc:'+15 aura pro klick', kosten:500, kostenWachs:1.5, art:'klick', wert:15 },
+  { id:'click4', name:'KARTELL BOSS', desc:'+50 aura pro klick', kosten:3000, kostenWachs:1.6, art:'klick', wert:50 },
+  { id:'auto1', name:'plexi mit ELE SPONGEBOB', desc:'+1 aura/sekunde (auto)', kosten:50, kostenWachs:1.2, art:'auto', wert:1 },
+  { id:'auto2', name:'JUGHEAD AUTO-MOD', desc:'+5 aura/sek (wird oft weggeweht)', kosten:300, kostenWachs:1.3, art:'auto', wert:5 },
+  { id:'auto3', name:'LAMBO-VAULT', desc:'+25 aura/sek', kosten:2000, kostenWachs:1.4, art:'auto', wert:25 },
+  { id:'auto4', name:'BAMBILAND PARK', desc:'+150 aura/sek', kosten:15000, kostenWachs:1.5, art:'auto', wert:150 },
+  { id:'auto5', name:'TUNG TUNG TUNG SAHUR', desc:'+1000 aura/sek (kommt mit holz)', kosten:100000, kostenWachs:1.6, art:'auto', wert:1000 },
+  { id:'auto6', name:'KUCKUCK SELBST', desc:'+10000 aura/sek (verlangt marbles)', kosten:1000000, kostenWachs:1.7, art:'auto', wert:10000 }
+];
+
+const state = {
+  aura: parseInt(localStorage.getItem('clicker-aura')||'0',10),
+  total: parseInt(localStorage.getItem('clicker-total')||'0',10),
+  clicks: parseInt(localStorage.getItem('clicker-clicks')||'0',10),
+  besitz: JSON.parse(localStorage.getItem('clicker-besitz')||'{}'),
+  startZeit: Date.now()
+};
+const cps = () => 1 + UPGRADES.filter(u=>u.art==='klick').reduce((s,u)=>s+(state.besitz[u.id]||0)*u.wert,0);
+const aps = () => UPGRADES.filter(u=>u.art==='auto').reduce((s,u)=>s+(state.besitz[u.id]||0)*u.wert,0);
+const aktKosten = (u) => Math.floor(u.kosten * Math.pow(u.kostenWachs, state.besitz[u.id]||0));
+
+function fmt(n) {
+  n = Math.floor(n);
+  if (n < 1000) return n.toString();
+  if (n < 1000000) return (n/1000).toFixed(1) + 'k';
+  if (n < 1000000000) return (n/1000000).toFixed(2) + 'M';
+  return (n/1000000000).toFixed(2) + 'Mrd';
+}
+
+const $aura = document.getElementById('aura');
+const $aps = document.getElementById('aps');
+const $cps = document.getElementById('cps');
+const $upgrades = document.getElementById('upgrades');
+const $knopf = document.getElementById('knopf');
+
+function rendere() {
+  $aura.textContent = fmt(state.aura);
+  $aps.textContent = fmt(aps());
+  $cps.textContent = fmt(cps());
+  document.getElementById('stat-total').textContent = fmt(state.total);
+  document.getElementById('stat-clicks').textContent = state.clicks;
+  document.title = `${fmt(state.aura)} Aura — Clicker`;
+  rendereShop();
+}
+function rendereShop() {
+  $upgrades.innerHTML = UPGRADES.map(u => {
+    const k = aktKosten(u);
+    const b = state.besitz[u.id] || 0;
+    const kaputt = state.aura < k ? 'kaputt' : '';
+    return `<div class="upgrade ${kaputt}" data-id="${u.id}">
+      <div>
+        <span class="name">${u.name} ${b ? `<span class="besitz">${b}</span>` : ''}</span>
+        <span class="desc">${u.desc}</span>
+      </div>
+      <span class="preis">${fmt(k)}</span>
+    </div>`;
+  }).join('');
+  $upgrades.querySelectorAll('.upgrade').forEach(el => {
+    el.addEventListener('click', () => kaufeUpgrade(el.dataset.id));
+  });
+}
+function kaufeUpgrade(id) {
+  const u = UPGRADES.find(x => x.id === id);
+  const k = aktKosten(u);
+  if (state.aura < k) return;
+  state.aura -= k;
+  state.besitz[id] = (state.besitz[id] || 0) + 1;
+  pruefAchievement(u);
+  speichere();
+  rendere();
+}
+
+function klick(e) {
+  state.aura += cps();
+  state.total += cps();
+  state.clicks++;
+  // float number
+  const r = $knopf.getBoundingClientRect();
+  const fl = document.createElement('div');
+  fl.className = 'float-num';
+  fl.textContent = '+' + cps();
+  fl.style.left = (r.left + r.width/2 + (Math.random()-0.5)*40) + 'px';
+  fl.style.top = (r.top + 20) + 'px';
+  fl.style.position = 'fixed';
+  document.body.appendChild(fl);
+  setTimeout(() => fl.remove(), 1000);
+  pruefClickAchievement();
+  rendere();
+}
+$knopf.addEventListener('click', klick);
+document.addEventListener('keydown', e => { if (e.code === 'Space' && e.target.tagName !== 'INPUT') { e.preventDefault(); klick(); } });
+
+// auto-tick — interne float-akkumulierung, aber sauber gerundet
+let auraBruch = 0, totalBruch = 0;
+setInterval(() => {
+  if (aps() > 0) {
+    auraBruch += aps() / 10;
+    totalBruch += aps() / 10;
+    const dAura = Math.floor(auraBruch);
+    const dTotal = Math.floor(totalBruch);
+    if (dAura > 0) { state.aura += dAura; auraBruch -= dAura; }
+    if (dTotal > 0) { state.total += dTotal; totalBruch -= dTotal; }
+    rendere();
+  }
+}, 100);
+
+// safety: periodisch state-werte hart runden gegen float-drift
+setInterval(() => {
+  state.aura = Math.floor(state.aura);
+  state.total = Math.floor(state.total);
+}, 3000);
+setInterval(speichere, 5000);
+setInterval(() => {
+  const sek = Math.floor((Date.now() - state.startZeit) / 1000);
+  document.getElementById('stat-zeit').textContent = Math.floor(sek/60) + ':' + String(sek%60).padStart(2,'0');
+}, 1000);
+
+function speichere() {
+  localStorage.setItem('clicker-aura', Math.floor(state.aura));
+  localStorage.setItem('clicker-total', Math.floor(state.total));
+  localStorage.setItem('clicker-clicks', state.clicks);
+  localStorage.setItem('clicker-besitz', JSON.stringify(state.besitz));
+}
+function resetGame() {
+  if (!confirm('alle aura verlieren? upgrades verlieren? alles? sicher?')) return;
+  state.aura = 0; state.total = 0; state.clicks = 0; state.besitz = {};
+  speichere();
+  rendere();
+  zeigeAchievement('🔄 NEUER ANFANG', 'aber dieselbe persönlichkeit.');
+}
+
+const achievementsGegeben = new Set(JSON.parse(localStorage.getItem('clicker-achievements') || '[]'));
+function zeigeAchievement(titel, sub) {
+  const id = titel + sub;
+  if (achievementsGegeben.has(id)) return;
+  achievementsGegeben.add(id);
+  localStorage.setItem('clicker-achievements', JSON.stringify([...achievementsGegeben]));
+  const a = document.createElement('div');
+  a.className = 'achievement-popup';
+  a.innerHTML = `<div style="font-size:16px;">🏆 ${titel}</div><div style="font-family:'Special Elite',monospace; font-size:12px; letter-spacing:0; margin-top:4px;">${sub}</div>`;
+  document.body.appendChild(a);
+  setTimeout(() => a.remove(), 5000);
+}
+function pruefClickAchievement() {
+  if (state.clicks === 10) zeigeAchievement('LANGEWEILE', 'das war erst 10 klicks. läuft.');
+  if (state.clicks === 100) zeigeAchievement('100 KLICKS', 'andere haben hobbies.');
+  if (state.clicks === 500) zeigeAchievement('500 KLICKS', 'jughead beobachtet dich. besorgt.');
+  if (state.clicks === 1000) zeigeAchievement('1000 KLICKS', 'der acer-stuhl hat geknarzt.');
+  if (state.clicks === 5000) zeigeAchievement('5000 KLICKS', 'aclasher hat um deine therapeutin gebeten.');
+}
+function pruefAchievement(u) {
+  zeigeAchievement('UPGRADE: ' + u.name, 'gute investition. wahrscheinlich.');
+  if (u.id === 'auto6') zeigeAchievement('KUCKUCK GEKAUFT', 'er ist nicht zu verkaufen. aber du hast bezahlt.');
+}
+
+rendere();
+console.log('%c💎 AURA-CLICKER', 'background:#ff3a8c; color:#fff; padding:8px 16px; font-size:18px; font-weight:bold;');
+console.log('%ctipp: SPACE klickt auch. cheat: window.state.aura = 9999999', 'color:#c9a85a; font-size:11px;');
+window.state = state;
+</script>
+</body>
+</html>

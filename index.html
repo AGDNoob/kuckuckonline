@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Geleakte Ermittlungsakten der Bundesermittlungsstelle für Geometry-Dash-Vorfälle. STRENG VERTRAULICH.">
+<title>KUCKUCK FILES — Bundesermittlungsstelle für Geometry-Dash-Vorfälle</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text x='10' y='48' font-size='52' font-family='Anton'>K</text></svg>">
+</head>
+<body>
+
+<!-- =============================================================
+     ALLE EASTER EGGS — der ausweichende button
+     ============================================================= -->
+<a href="easter-eggs.html" id="egg-btn" class="egg-btn">
+  <span class="blink-dot"></span> ALLE EASTER EGGS
+</a>
+
+<!-- =============================================================
+     ELE SPONGEBOB STREIFEN GANZ OBEN
+     ============================================================= -->
+<div class="ele-streifen" id="ele-streifen">
+  <span class="frage">🧽 WILLST DU ELE SPONGEBOB HÖREN? 🧽</span>
+  <button class="btn-ja" id="ele-btn">JA</button>
+</div>
+
+<!-- =============================================================
+     STAATSBEHÖRDEN-LEISTE (Easter-Egg-Buffet im Footer)
+     ============================================================= -->
+<div class="gov-bar">
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online — Sichere Verbindung NICHT verifiziert</span>
+  <span>Akten-Standort: <b>Bunker 7, Köln</b> &nbsp;|&nbsp; Server-Aura: STABIL</span>
+</div>
+
+<!-- =============================================================
+     BEHÖRDEN-HEADER
+     ============================================================= -->
+<header class="behoerde">
+  <div class="wappen" id="wappen" title="nicht klicken">K</div>
+  <h1>
+    BUNDESERMITTLUNGSSTELLE
+    <small>FÜR GEOMETRY-DASH-VORFÄLLE — BEGV — DOKUMENTATIONSPORTAL</small>
+  </h1>
+  <div class="right">
+    <div>AKTENZEICHEN: BEGV-K-2026/Δ</div>
+    <div>STATUS: <span class="blink">LEAK BESTÄTIGT</span></div>
+    <button class="login-btn" id="login-btn">▸ MITARBEITER-LOGIN</button>
+  </div>
+</header>
+
+<!-- =============================================================
+     LIVE-TICKER (wird per JS dupliziert für nahtlosen loop)
+     ============================================================= -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker-inner">
+    <span>plexi hat ELE SPONGEBOB zum 9. Mal angemacht</span>
+    <span>Jughead meldet weitere Wegwehung (Vorfall Nr. 18)</span>
+    <span>Wildschwein noch immer flüchtig — letzte Sichtung A3 Richtung Köln</span>
+    <span>Marbles-Hungersnot dauert an — Tag 412</span>
+    <span>Aeternus-Verifizierung bleibt biologisch unmöglich</span>
+    <span>Triple-T sichtet sich selbst im Spiegel — gefährliche Aura-Reflexion</span>
+    <span>Steve weiterhin unauffindbar — Steckbriefe ausgehängt (Hinweis: er ist Kurzhaarmeister)</span>
+    <span>Kurzhaarmeister erhöht Demon-Count auf 733</span>
+    <span>polnischer Zoink offiziell als Kuckuck identifiziert — Pass wird eingezogen</span>
+    <span>Acer-Stuhl beantragt erneut Zeugenschutzprogramm</span>
+    <span>Shine For Ne meldet 20000ster Crazy Demon — Untersuchung läuft</span>
+    <span>TUNG TUNG TUNG SAHUR in Mailand gesichtet — er kommt mit dem Holz</span>
+    <span>Aclasher (admin) hat sich eingeloggt — root-zugriff bestätigt</span>
+    <span>SananenBaft beleidigt weiterhin alle ohne Pause</span>
+    <span>Steve = Kurzhaarmeister bestätigt durch DNA-Probe von Schnurrbart</span>
+    <span>BAFT-COIN-Kurs gefallen um 47% — Vault-Investoren in Sorge</span>
+    <span>Bambiland-Eröffnung verschoben auf "niemals"</span>
+    <span>KrmaL veröffentlicht neues Level — Kuckuck weint präventiv</span>
+    <span>Captain Carry in Pension — Nachfolger gesucht</span>
+    <span>Monster-White-Vorrat: 3 Dosen · kritischer Stand</span>
+    <span>plexi-Aktivität ungewöhnlich hoch — ELE-Level bei 11/10</span>
+    <span>Der Holzmann-Auftritt für Q3 angekündigt</span>
+    <span>KI-Bild-Generator fehlgeschlagen #4711 — User-Prompt erneut zu schwach</span>
+    <span>Aura-Weekly Abonnentenzahl: 0 (Plan)</span>
+    <span>Lambo-Vault hat 1 neues Fahrzeug — Quelle: unklar</span>
+    <span>Wave-Part-Warnung für Sektor 7 ausgegeben</span>
+    <span>Mr.Best erneut mit 3 Crazy Demons auf Platz 2</span>
+    <span>Bambi-Population in Bambiland-Zone: theoretisch stabil</span>
+    <span>plexi hat in der Zwischenzeit ELE SPONGEBOB ein weiteres Mal angemacht</span>
+  </div>
+</div>
+
+<!-- =============================================================
+     COOKIE-BANNER
+     ============================================================= -->
+<div class="cookie-banner" id="cookie-banner">
+  <span class="x" id="cookie-x">✕</span>
+  <h4>🍪 AURA-COOKIES</h4>
+  <p>Diese Seite verwendet Aura, ELE-SPONGEBOB-Tracking und gelegentlich Wave-Parts, um Ihre Verweildauer biologisch unmöglich zu machen.</p>
+  <div class="buttons">
+    <button id="cookie-ja">Akzeptieren</button>
+    <button id="cookie-mehr-ja">Auch akzeptieren</button>
+    <button id="cookie-nein">Ablehnen (deaktiviert)</button>
+  </div>
+</div>
+
+<!-- =============================================================
+     HERO / CONSPIRACY BOARD
+     ============================================================= -->
+<section class="hero">
+  <div class="leak-banner">LEAK BESTÄTIGT &nbsp; ▸ &nbsp; 119+ AKTEN ÖFFENTLICH</div>
+  <h2>DIE <span class="red">KUCKUCK</span> FILES</h2>
+  <div class="untertitel">— Was sie nicht wollten, dass du erfährst —</div>
+  <div class="meta">Veröffentlicht: 26.05.2026 &nbsp; · &nbsp; Quelle: anonym (vermutlich Jughead) &nbsp; · &nbsp; Echtheit: <b>BESTÄTIGT</b></div>
+
+  <div class="conspiracy-board" id="board">
+    <!-- Polaroids werden frei platziert -->
+    <div class="pin" style="top: 30px; left: 215px;"></div>
+    <div class="polaroid" data-akte="039" style="top: 38px; left: 80px; transform: rotate(-6deg);">
+      <img src="img/haarvorfall.png" alt="">
+      <div class="caption">"die hairline"<br>— 14.04.2026</div>
+    </div>
+
+    <div class="pin" style="top: 30px; left: 480px;"></div>
+    <div class="polaroid" data-akte="051" style="top: 40px; left: 360px; transform: rotate(4deg);">
+      <img src="img/wildschwein.png" alt="">
+      <div class="caption">140 km/h — A3</div>
+    </div>
+
+    <div class="pin" style="top: 30px; left: 750px;"></div>
+    <div class="polaroid" data-akte="081" style="top: 50px; left: 620px; transform: rotate(-3deg);">
+      <img src="img/lambo-vault-1.png" alt="">
+      <div class="caption">"keine einnahmen"<br>angeblich.</div>
+    </div>
+
+    <div class="pin" style="top: 30px; left: 1000px;"></div>
+    <div class="polaroid" data-akte="060" style="top: 60px; left: 880px; transform: rotate(5deg);">
+      <img src="img/demon-grind.png" alt="">
+      <div class="caption">FULL ZOINK</div>
+    </div>
+
+    <div class="note" style="top: 270px; left: 60px; transform: rotate(-4deg);">
+      "der mann hat keinen<br>job aber 47 lambos.<br>denk mal drüber nach."<br><b>— J.</b>
+    </div>
+
+    <div class="pin" style="top: 290px; left: 320px;"></div>
+    <div class="polaroid" data-akte="099" style="top: 300px; left: 245px; transform: rotate(2deg);">
+      <img src="img/baumrettung.png" alt="">
+      <div class="caption">"warte kurz"</div>
+    </div>
+
+    <div class="note pink" style="top: 305px; left: 470px; transform: rotate(3deg);">
+      ELE SPONGEBOB lief<br>insgesamt <b>9x</b> heute.<br>plexi war es. wieder.
+    </div>
+
+    <div class="pin" style="top: 290px; left: 720px;"></div>
+    <div class="polaroid" data-akte="072" style="top: 300px; left: 600px; transform: rotate(-5deg);">
+      <img src="img/parfuem-creed.png" alt="">
+      <div class="caption">PARFÜM-KARTELL</div>
+    </div>
+
+    <div class="pin" style="top: 290px; left: 1000px;"></div>
+    <div class="polaroid" data-akte="044" style="top: 310px; left: 880px; transform: rotate(7deg);">
+      <img src="img/battle-48h.png" alt="">
+      <div class="caption">21 vs 732.<br>kein kommentar.</div>
+    </div>
+
+    <div class="note green" style="top: 560px; left: 80px; transform: rotate(2deg);">
+      verdacht: monster white<br>statt blut im körper.<br>laborbericht ausstehend.
+    </div>
+
+    <div class="pin" style="top: 580px; left: 380px;"></div>
+    <div class="polaroid" data-akte="053" style="top: 590px; left: 270px; transform: rotate(-3deg);">
+      <img src="img/sonnen-kuckuck.png" alt="">
+      <div class="caption">"wir sind cooked"<br>— aclasher, 21.05.</div>
+    </div>
+
+    <div class="pin" style="top: 580px; left: 660px;"></div>
+    <div class="polaroid" data-akte="047" style="top: 600px; left: 540px; transform: rotate(5deg);">
+      <img src="img/skibidi-toilet.png" alt="">
+      <div class="caption">BRAINROT VERIFIED</div>
+    </div>
+
+    <div class="note" style="top: 600px; left: 800px; transform: rotate(-2deg); width: 200px;">
+      <b>verdächtige:</b><br>
+      ◦ Triple-T<br>
+      ◦ Steve (REDACTED)<br>
+      ◦ Kurzhaarmeister<br>
+      ◦ polnischer Zoink<br>
+      ◦ Jason (?)
+    </div>
+  </div>
+</section>
+
+<!-- =============================================================
+     KLASSIFIZIERUNGS-TABELLE
+     ============================================================= -->
+<section class="section">
+  <h3>KLASSIFIZIERUNGS-SYSTEM</h3>
+  <div class="sub">— intern entwickelt, weltweit nicht anerkannt —</div>
+  <div class="klass-table">
+    <div class="klass-row gruen">
+      <b>GRÜN</b>
+      Sicher. Normaler Cube-Part. Keine Gefahr. (Existiert theoretisch.)
+    </div>
+    <div class="klass-row orange">
+      <b>ORANGE</b>
+      Achtung. Ship-Part oder Ufo. Aura beginnt zu wirken.
+    </div>
+    <div class="klass-row rot">
+      <b>ROT</b>
+      Gefährlich. Wave incoming. Zuschauer evakuieren.
+    </div>
+    <div class="klass-row schwarz">
+      <b>SCHWARZ</b>
+      Top Secret. Verifizierungs-Run aktiv. Realität instabil.
+    </div>
+    <div class="klass-row aura">
+      <b>AURA</b>
+      Nicht messbar. Behörden nicht zuständig.
+    </div>
+    <div class="klass-row top1">
+      <b>TOP 1</b>
+      Höher als Aeternus. Wissenschaft kapituliert.
+    </div>
+  </div>
+  <p style="font-family: 'Caveat', cursive; font-size: 18px; color: var(--ink-soft); margin-top: 8px;">
+    Hinweis: Die Klassifizierung wird täglich von Jughead überprüft und systematisch ignoriert.
+  </p>
+</section>
+
+<!-- =============================================================
+     WERBUNG 1 — MONSTER WHITE E-GIRL
+     ============================================================= -->
+<a class="werbung werbung--monster" href="https://www.monsterenergy.com/" target="_blank" rel="noopener">
+  <div class="links">
+    <div class="emoji">🧃</div>
+    <div class="badge">NEU!</div>
+  </div>
+  <div class="rechts">
+    <div class="sterne">★★★★★ (4.987 Bewertungen)</div>
+    <div class="titel">Bestelle jetzt MONSTER WHITE</div>
+    <div class="text">
+      ⚡ Werde in nur <b>14 Tagen zum E-Girl</b> — oder Geld zurück* (*Geld nicht zurück).<br>
+      ⚡ Aura-Verstärkung garantiert. Acer-Stuhl-kompatibel.<br>
+      ⚡ Empfohlen von Kuckuck (vermutlich).<br>
+      ⚡ Auch beliebt bei: plexi · Jughead · Triple-T · einem anonymen Reh.
+    </div>
+    <span class="cta">▸ JETZT BESTELLEN</span>
+  </div>
+</a>
+
+<!-- =============================================================
+     AKTEN-GALERIE (HAUPTSEKTION)
+     ============================================================= -->
+<section class="section">
+  <h3>DIE AKTEN</h3>
+  <div class="sub">— alle Dossiers chronologisch sortiert nach Aura-Anstieg —</div>
+
+  <div class="akten-grid">
+
+    <a class="akte-card" data-akte="003">
+      <div class="nr">DOSSIER #003 · KLASS. ROT</div>
+      <div class="titel">DIE BAMBILAND-ZONE</div>
+      <div class="status">STATUS: <b>ROT</b></div>
+      <div class="vorschau">"Schmetterlinge nennt er seine kleinen Zuschauer." Zeuge: plexi.</div>
+    </a>
+
+    <a class="akte-card" data-akte="007">
+      <div class="nr">DOSSIER #007 · KOLOSSEUM</div>
+      <div class="titel">CRAZY DEMON DUEL</div>
+      <div class="status">STATUS: <b>ROT</b></div>
+      <div class="vorschau">Holzmann + Captain Carry vs Kuckuck. Endete mit "zu goofy."</div>
+    </a>
+
+    <a class="akte-card" data-akte="011">
+      <div class="nr">DOSSIER #011 · ANIME-BEZOGEN</div>
+      <div class="titel">DER GOJO-VORFALL</div>
+      <div class="status">STATUS: <b>ROT</b></div>
+      <div class="vorschau">Weiße Haare. Leuchtende Augen. Bedrohliche Aura trotz Acer-Stuhl.</div>
+    </a>
+
+    <a class="akte-card" data-akte="014">
+      <div class="nr">DOSSIER #014 · WAVE-ABHÄNGIG</div>
+      <div class="titel">WAVE CARRIED</div>
+      <div class="status">STATUS: <b>GEFÄHRLICH</b></div>
+      <div class="vorschau">4h Cube-Struggle, dann plötzlich Endboss. Jughead: "terminally wave carried."</div>
+      <div class="ecke">VIRAL</div>
+    </a>
+
+    <a class="akte-card" data-akte="021">
+      <div class="nr">DOSSIER #021 · TOP 1</div>
+      <div class="titel">AETERNUS VERIFICATION</div>
+      <div class="status">STATUS: <b class="top1">TOP 1</b></div>
+      <div class="vorschau">10 Attempts. Klinisch wahnsinniger Gesichtsausdruck. Roter Dämon nervös.</div>
+    </a>
+
+    <a class="akte-card" data-akte="028">
+      <div class="nr">DOSSIER #028 · BREAKDOWN</div>
+      <div class="titel">DELTA INTERFACE</div>
+      <div class="status">STATUS: <b class="schwarz">NICHT UNTER KONTROLLE</b></div>
+      <div class="vorschau">"Unlocked new Icon" — 43 mal wiederholt. Diskussion mit dem Acer-Stuhl.</div>
+    </a>
+
+    <a class="akte-card" data-akte="031">
+      <div class="nr">DOSSIER #031 · VERBOTEN</div>
+      <div class="titel">OPERATION MASS MONSTER</div>
+      <div class="status">STATUS: <b>VERBOTEN IN 17 FITNESSSTUDIOS</b></div>
+      <div class="vorschau">240kg Bizeps. Latissimus-Wave-Parts. Monitor wurde verdeckt.</div>
+    </a>
+
+    <a class="akte-card" data-akte="039">
+      <div class="nr">DOSSIER #039 · VERTUSCHT</div>
+      <div class="titel">DER HAARVORFALL</div>
+      <div class="status">STATUS: <b>VERTUSCHT</b></div>
+      <div class="vorschau">"Bro meine Hairline ist cooked." Verlust: Front, Hoffnung, Aura.</div>
+    </a>
+
+    <a class="akte-card weggeweht" data-akte="044">
+      <div class="nr">DOSSIER #044 · █████████</div>
+      <div class="titel">48H BATTLE DISASTER</div>
+      <div class="status">STATUS: <b class="schwarz">REDACTED</b></div>
+      <div class="vorschau">Inhalt wurde auf Anordnung von Kurzhaarmeister entfernt.</div>
+      <div class="ecke">ENTFERNT</div>
+    </a>
+
+    <a class="akte-card" data-akte="047">
+      <div class="nr">DOSSIER #047 · BRAINROT</div>
+      <div class="titel">SKIBIDI BRAINROT INCIDENT</div>
+      <div class="status">STATUS: <b>NICHT MENSCHLICH</b></div>
+      <div class="vorschau">Kuckuck vs Skibidi Toilet. Lichtschwert involviert. Brainrot bestätigt.</div>
+    </a>
+
+    <a class="akte-card" data-akte="051">
+      <div class="nr">DOSSIER #051 · A3</div>
+      <div class="titel">OPERATION WILDSCHWEIN</div>
+      <div class="status">STATUS: <b>BIOLOGISCH UNERKLÄRBAR</b></div>
+      <div class="vorschau">140 km/h auf der Autobahn. Wildschwein "ungewöhnlich entspannt".</div>
+    </a>
+
+    <a class="akte-card" data-akte="053">
+      <div class="nr">DOSSIER #053 · ASTRONOMISCH</div>
+      <div class="titel">DAS SONNEN-PHÄNOMEN</div>
+      <div class="status">STATUS: <b class="aura">AURA</b></div>
+      <div class="vorschau">Aura erreichte solche Intensität, dass die Sonne ihn als ihren Anführer akzeptierte.</div>
+    </a>
+
+    <a class="akte-card" data-akte="060">
+      <div class="nr">DOSSIER #060 · ZOINKIFIED</div>
+      <div class="titel">THE DEMON GRIND INCIDENT</div>
+      <div class="status">STATUS: <b class="schwarz">NICHT MENSCHLICH</b></div>
+      <div class="vorschau">Rote Laseraugen. "DAS IST FREE." Dämonen hatten Angst vor ihm.</div>
+    </a>
+
+    <a class="akte-card" data-akte="072">
+      <div class="nr">DOSSIER #072 · FINANZAMT</div>
+      <div class="titel">PARFÜM-KARTELL</div>
+      <div class="status">STATUS: <b>FINANZAMT INFORMIERT</b></div>
+      <div class="vorschau">Creed. Xerjoff. Roja. Aura roch nach 400€. Schwarzmarkt-Verdacht.</div>
+    </a>
+
+    <a class="akte-card" data-akte="077">
+      <div class="nr">DOSSIER #077 · MARKE</div>
+      <div class="titel">"KARTELL BOSS" PARFÜM</div>
+      <div class="status">STATUS: <b>STEUERHINTERZIEHUNG VERMUTET</b></div>
+      <div class="vorschau">Eigene Parfüm-Marke aufgebaut. Slogan: "Rule your world." Keine Lizenz vorhanden.</div>
+      <div class="ecke neu">NEU</div>
+    </a>
+
+    <a class="akte-card" data-akte="081">
+      <div class="nr">DOSSIER #081 · STEUERLICH HOCHINTERESSANT</div>
+      <div class="titel">LAMBORGHINI VAULT</div>
+      <div class="status">STATUS: <b>FINANZAMT VERSCHWUNDEN</b></div>
+      <div class="vorschau">Dutzende Huracáns. 0 nachvollziehbare Einkommensquellen. "Dream big."</div>
+    </a>
+
+    <a class="akte-card" data-akte="084">
+      <div class="nr">DOSSIER #084 · KINDHEIT</div>
+      <div class="titel">DER LOLLI-VORFALL</div>
+      <div class="status">STATUS: <b>EMOTIONAL</b></div>
+      <div class="vorschau">Archivmaterial aus dem Bambiland-Park, ca. 1996. "NEIIIN! MEIN LOLLI!"</div>
+    </a>
+
+    <a class="akte-card" data-akte="092">
+      <div class="nr">DOSSIER #092 · LEADERBOARD-MANIPULATION</div>
+      <div class="titel">CRAZY DEMONS RANKING</div>
+      <div class="status">STATUS: <b>ERMITTLUNGEN LAUFEN</b></div>
+      <div class="vorschau">"Shine For Ne" — 19999 Crazy Demons. Mr.Best (3 Demons) angeblich getäuscht.</div>
+    </a>
+
+    <a class="akte-card" data-akte="095">
+      <div class="nr">DOSSIER #095 · UNTER 1.5K</div>
+      <div class="titel">ARCTIC LIGHTS</div>
+      <div class="status">STATUS: <b class="top1">UNTER 1500 VERSUCHEN</b></div>
+      <div class="vorschau">Verifiziert mit unter 1.5K Attempts. Community-Wissenschaft: "biologisch fragwürdig."</div>
+    </a>
+
+    <a class="akte-card" data-akte="099">
+      <div class="nr">DOSSIER #099 · HELDENAKTE</div>
+      <div class="titel">BAUMRETTUNG VON BERLIN</div>
+      <div class="status">STATUS: <b class="gruen">HELDENAKTE</b></div>
+      <div class="vorschau">Stoppte Baum mit bloßen Händen. Pinke Kopfhörer funktionierten weiter.</div>
+    </a>
+
+    <a class="akte-card" data-akte="101">
+      <div class="nr">DOSSIER #101 · TUTORIAL</div>
+      <div class="titel">"HOW TO PLATTFORMER"</div>
+      <div class="status">STATUS: <b>IRREFÜHREND</b></div>
+      <div class="vorschau">Behauptet, 6 Stunden zum Durchspielen. Tatsächlich vermutlich 6 Sekunden.</div>
+    </a>
+
+    <a class="akte-card" data-akte="108">
+      <div class="nr">DOSSIER #108 · MOBBING</div>
+      <div class="titel">JUGHEAD-MOBBING-KOMPLEX</div>
+      <div class="status">STATUS: <b>SEIT JAHREN AKTIV</b></div>
+      <div class="vorschau">"Es ist kein direktes Mobbing. Es ist ein permanentes mentales Debuff-System."</div>
+    </a>
+
+    <a class="akte-card" data-akte="112">
+      <div class="nr">DOSSIER #112 · KULINARISCH</div>
+      <div class="titel">DIE SAFTI-DÖNER-VERSCHWÖRUNG</div>
+      <div class="status">STATUS: <b>UNGEKLÄRT</b></div>
+      <div class="vorschau">"Wir holen gleich Döner." Lieferung: nie eingetroffen. Größter Foodbait Deutschlands.</div>
+    </a>
+
+    <a class="akte-card" data-akte="117">
+      <div class="nr">DOSSIER #117 · IDENTITÄT</div>
+      <div class="titel">UwU-VORFALL</div>
+      <div class="status">STATUS: <b class="aura">IDENTITÄTSVERLUST</b></div>
+      <div class="vorschau">Geleaktes Material zeigt unbekannte Person mit pinken Haaren in Kuckucks Setup.</div>
+    </a>
+
+    <a class="akte-card" data-akte="119">
+      <div class="nr">DOSSIER #119 · HUNGERSNOT</div>
+      <div class="titel">MARBLES-UNTERDRÜCKUNG</div>
+      <div class="status">STATUS: <b>COMMUNITY EMPÖRT</b></div>
+      <div class="vorschau">"Ich glaube Marbles existiert nur noch theoretisch." — Jughead. Tag 412.</div>
+    </a>
+
+    <a class="akte-card verschluesselt" data-akte="120">
+      <div class="nr">DOSSIER #120 · UNVERÖFFENTLICHT</div>
+      <div class="titel">█████████ ██████ ████</div>
+      <div class="status">STATUS: <b class="schwarz">VERSCHLÜSSELT</b></div>
+      <div class="vorschau">Passwort erforderlich. Hinweis: Anzahl der Huracáns im Vault.</div>
+    </a>
+
+  </div>
+</section>
+
+<!-- =============================================================
+     WERBUNG 2 — BLACK BLIZZARD VON KRMAL
+     ============================================================= -->
+<a class="werbung werbung--krmal" href="https://www.google.com/search?q=geometry+dash+Black+Blizzard+KrmaL" target="_blank" rel="noopener">
+  <div class="links">
+    <div class="emoji">❄️</div>
+    <div class="badge">EDITOR'S CHOICE</div>
+  </div>
+  <div class="rechts">
+    <div class="sterne">★★★★★ (∞ Bewertungen)</div>
+    <div class="titel">Spiele BLACK BLIZZARD von KrmaL</div>
+    <div class="text" style="color:#ccc;">
+      ❄ Das <b style="color:#ff3a8c;">beste Level deines Lebens</b>.<br>
+      ❄ Auch Kuckuck konnte es nur mit Wave-Carrying schaffen (#014).<br>
+      ❄ Bereits über 9.000 Streamer mental zerstört.<br>
+      ❄ <i>"das ist free." — Kuckuck, kurz vor dem Absturz</i>
+    </div>
+    <span class="cta">▸ JETZT HERUNTERLADEN (0€)</span>
+  </div>
+</a>
+
+<!-- =============================================================
+     PERSONEN-WAND
+     ============================================================= -->
+<section class="section">
+  <h3>VERDÄCHTIGE &amp; ZEUGEN</h3>
+  <div class="sub">— alle Profile mit Vorsicht zu genießen. mehrere Identitäten unklar. —</div>
+
+  <div class="personen-grid">
+
+    <div class="person-card">
+      <span class="stempel-mini">HAUPTV.</span>
+      <div class="foto"><img src="img/sonnen-kuckuck.png" alt=""></div>
+      <div class="name">KUCKUCK</div>
+      <div class="rolle">HAUPTVERDÄCHTIGER</div>
+      <div class="info">Aura-Level: <b>UNMESSBAR</b>. Kopfhörer: pink. Bürgerlicher Name: <b>Jason</b>. Aliase laut Akte: "polnischer Zoink", "Deutscher Zoink", "der mit dem Acer-Stuhl". Vermutlich auch identisch mit Steve, aber das ist eine andere Akte.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">ZEUGE</span>
+      <div class="foto kein-foto">PROFILBILD WEGGEWEHT</div>
+      <div class="name">JUGHEAD</div>
+      <div class="rolle">MODERATOR / DESTABILISIERT</div>
+      <div class="info">17-fach weggeweht. Wichtigste Nachrichten ignoriert. Hauptopfer des Mobbing-Komplexes (#108).</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">ZEUGE</span>
+      <div class="foto kein-foto">KEIN BILDMATERIAL</div>
+      <div class="name">plexi</div>
+      <div class="rolle">ELE-SPONGEBOB-KOMPLIZE</div>
+      <div class="info">Verdächtig: Hat ELE SPONGEBOB heute bereits 9x angemacht. Mehrere Songrequests während laufender Mental Breakdowns dokumentiert.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">ZEUGE</span>
+      <div class="foto kein-foto">PROFILBILD VERLOREN</div>
+      <div class="name">mystery</div>
+      <div class="rolle">PSEUDONYM NICHT ZUGEORDNET</div>
+      <div class="info">"Jedes Mal wenn er 100% schafft erscheint irgendwo ein neuer Huracán." Vermutlich nicht eine einzelne Person.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">ZEUGE</span>
+      <div class="foto kein-foto">REDACTED</div>
+      <div class="name">ArenaiTV</div>
+      <div class="rolle">VERDÄCHTIG OFT VOR ORT</div>
+      <div class="info">"Bro denkt wirklich er ist Gojo." Mehrere Vorfälle aus erster Hand bezeugt. Aura-Toleranz: hoch.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">ADMIN</span>
+      <div class="foto kein-foto">SYSTEM-ADMIN</div>
+      <div class="name">Aclasher</div>
+      <div class="rolle">AKA ADMIN · KOMMENTATOR</div>
+      <div class="info">Bürgerlicher Name in BEGV-Systemen: <b>Admin</b>. Verfasste mehrere offizielle Statements. "Bro hat Creative Mode im Gym aktiviert." Hat root-Zugriff auf Bunker 7. Gefahrenstufe: trocken.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">ZEUGE</span>
+      <div class="foto kein-foto">PROFILBILD WIRD GEPRÜFT</div>
+      <div class="name">Arthur</div>
+      <div class="rolle">FOODBAIT-OPFER</div>
+      <div class="info">"Der Mann schaut mich an als wäre ich der nächste Click." Hauptopfer der Safti-Döner-Verschwörung.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">ZEUGE</span>
+      <div class="foto kein-foto">NOOB</div>
+      <div class="name">einGDNoob</div>
+      <div class="rolle">UNZUVERLÄSSIGER ZEUGE</div>
+      <div class="info">Behauptet, Kuckuck habe einen ganzen Baum mit "warte kurz" gestoppt. Glaubwürdigkeit: erstaunlich hoch.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">KOMPL.</span>
+      <div class="foto kein-foto">UNBEKANNT</div>
+      <div class="name">Safti</div>
+      <div class="rolle">DÖNER-KOMPLIZE</div>
+      <div class="info">Co-Initiator der Safti-Döner-Verschwörung. Lieferte nie. Vermutlich Hauptverantwortlicher der Sauce-Vakanz.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">AURA</span>
+      <div class="foto"><img src="img/triple-t-bald.png" alt=""></div>
+      <div class="name">TRIPLE-T</div>
+      <div class="rolle">TUNG TUNG TUNG SAHUR</div>
+      <div class="info">Wahre Identität bestätigt: <b>Tung Tung Tung Sahur</b>. Italienische Brainrot-Herkunft. Bewaffnet mit Holz. Erkennungsmerkmale: Glatze, Schal, mysteriöses Grinsen, gelegentliches "Tung Tung Tung". Auratoleranz: <b>maximal</b>. Beteiligung an mehreren ungeklärten Vorfällen.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">CHAMP</span>
+      <div class="foto"><img src="img/battle-48h.png" alt="" style="object-position: left;"></div>
+      <div class="name">KURZHAARMEISTER</div>
+      <div class="rolle">AKA STEVE · 48H BATTLE WINNER</div>
+      <div class="info">Bürgerlicher Name: <b>Steve</b>. 732 Demons. Schnurrbart. Bedrohliche Kurzhaarmeister-Aura. Hat Akte #044 zur Entfernung angeordnet (jetzt bestätigt). Identität wurde lange als REDACTED geführt — auf eigenen Wunsch.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">UNKLAR</span>
+      <div class="foto"><img src="img/demon-grind.png" alt="" style="object-position: right;"></div>
+      <div class="name">POLNISCHER ZOINK</div>
+      <div class="rolle">= KUCKUCK (BESTÄTIGT)</div>
+      <div class="info">Nach jahrelangen Ermittlungen offiziell bestätigt: <b>identisch mit Kuckuck</b>. Polnischer Pass: gefälscht. Polnische Sprachkenntnisse: keine. Aura: identisch. Akte wird in Kürze mit dem Kuckuck-Profil zusammengeführt.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">MYTHOS</span>
+      <div class="foto kein-foto">NUR ZEUGENSKIZZEN</div>
+      <div class="name">DER HOLZMANN</div>
+      <div class="rolle">MYTHOLOGISCHE ENTITÄT</div>
+      <div class="info">Erscheint im Crazy Demon Duel (#007). Existenz von der Wissenschaft nicht bestätigt. Symbiose mit Captain Carry vermutet.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">MYTHOS</span>
+      <div class="foto kein-foto">SICHTUNG: 1x</div>
+      <div class="name">CAPTAIN CARRY</div>
+      <div class="rolle">MYTHOLOGISCHE ENTITÄT</div>
+      <div class="info">Tritt nur in Tag-Team-Konstellation mit dem Holzmann auf. User "mystery" behauptet, im Hintergrund "NOT CARRIED" gehört zu haben.</div>
+    </div>
+
+    <div class="person-card">
+      <span class="stempel-mini">VERDÄCHTIG</span>
+      <div class="foto"><img src="img/crazy-leaderboard.png" alt="" style="object-position: center;"></div>
+      <div class="name">SHINE FOR NE</div>
+      <div class="rolle">19999 CRAZY DEMONS</div>
+      <div class="info">Statistisch unwahrscheinlich. Möglicherweise Tippfehler. Möglicherweise illegal. Mr.Best dabei nur Platz 2 mit "3 Crazy Demons".</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =============================================================
+     NEWSLETTER + TESTIMONIALS
+     ============================================================= -->
+<section class="section">
+  <div class="newsletter-box">
+    <h3>AURA WEEKLY</h3>
+    <div class="desc">
+      Wöchentliche Updates direkt aus Bunker 7. Erfahre als Erster von neuen Wegwehungen, Wave-Parts und Lambo-Sichtungen.
+    </div>
+    <form class="form" onsubmit="return abonniere(event)">
+      <input type="email" placeholder="deine.email@bambiland.de" required id="newsletter-email">
+      <button type="submit">ABONNIEREN</button>
+    </form>
+    <div class="winzig">
+      *Mit dem Abonnieren bestätigst du, dass du 0 Newsletter erhalten wirst.<br>
+      Daten werden direkt an Jughead weitergeleitet und von ihm vergessen.
+    </div>
+  </div>
+
+  <h3>WAS UNSERE KLIENTEN SAGEN</h3>
+  <div class="sub">— echte Bewertungen, echte Aura. nicht gefälscht (vermutlich) —</div>
+
+  <div class="testimonials">
+    <div class="testi" style="--rot: -1.5deg;">
+      <div class="sterne">★★★★★</div>
+      <div class="zitat">"Habe nur eine Akte gelesen und mein Wave-Part war plötzlich frei. Danke BEGV."</div>
+      <div class="name">— plexi42</div>
+      <div class="rolle">verifizierter ELE-Hörer</div>
+    </div>
+    <div class="testi" style="--rot: 1.2deg;">
+      <div class="sterne">★★★★★</div>
+      <div class="zitat">"Endlich versteht jemand was hier wirklich abgeht. Bin nicht mehr wegegweht worden seit ich hier bin."</div>
+      <div class="name">— Jughead</div>
+      <div class="rolle">moderator a.D.</div>
+    </div>
+    <div class="testi" style="--rot: -0.8deg;">
+      <div class="sterne">★★★☆☆</div>
+      <div class="zitat">"3 sterne. mir fehlt Marbles."</div>
+      <div class="name">— Anonym</div>
+      <div class="rolle">vereinte zuschauer</div>
+    </div>
+    <div class="testi" style="--rot: 2deg;">
+      <div class="sterne">★★★★★</div>
+      <div class="zitat">"bro hat creative mode auf der seite aktiviert."</div>
+      <div class="name">— Aclasher</div>
+      <div class="rolle">kommentator</div>
+    </div>
+    <div class="testi" style="--rot: -1deg;">
+      <div class="sterne">★★★★★</div>
+      <div class="zitat">"TUNG TUNG TUNG SAHUR."</div>
+      <div class="name">— Triple-T</div>
+      <div class="rolle">italienische brainrot-fraktion</div>
+    </div>
+    <div class="testi" style="--rot: 0.7deg;">
+      <div class="sterne">☆☆☆☆☆</div>
+      <div class="zitat">"keine Ahnung wie ich hier gelandet bin. ich wollte eigentlich nur Geometry Dash spielen."</div>
+      <div class="name">— neuer Zuschauer</div>
+      <div class="rolle">noch nicht zoinkifiziert</div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================================
+     SANANENBAFT ROAST BUTTON
+     ============================================================= -->
+<section class="roast-mega">
+  <button class="roast-btn" id="roast-btn">
+    🔥 LASS DICH VON SANANENBAFT ROASTEN 🔥
+  </button>
+  <span class="sub">
+    — 47 individuelle Beleidigungen direkt aus dem BEGV-Beleidigungs-Generator —<br>
+    nicht persönlich nehmen. (doch persönlich nehmen.)
+  </span>
+</section>
+
+<!-- =============================================================
+     JUGHEAD-SPENDEN-AKTION + KUCKUCK-SPENDE-TWIST
+     ============================================================= -->
+<section class="spende-mega">
+  <div class="spende-card" id="spende-card">
+    <h3>HILF JUGHEAD</h3>
+    <div class="sub">17× weggeweht. 0× Anerkennung. Jetzt brauchst er DICH.</div>
+    <div class="balken-aussen">
+      <div class="balken-innen" style="width: 0.0001%;"></div>
+      <div class="balken-text">0,00 € von 1.000.000 € · 0,0%</div>
+    </div>
+    <div class="balken-meta">
+      Ziel: 1.000.000 € für neue Aura (oder zumindest eine Hairline)<br>
+      Tag <b>412</b> der Kampagne · <b>0</b> erfolgreiche Spender · <b>9.847</b> Versuche
+    </div>
+    <button class="spende-btn" id="spende-btn">🥺 JETZT SPENDEN</button>
+    <div class="winzig">
+      Steuerlich nicht absetzbar (Spendenquittung wurde weggeweht).<br>
+      Beraten durch Aclasher (admin). Verifiziert durch niemanden.
+    </div>
+  </div>
+
+  <div class="spende-kuckuck" id="spende-kuckuck">
+    <h3>FÜR KUCKUCK SPENDEN</h3>
+    <div class="sub">der streamer dahinter. der wahre held.</div>
+    <ul class="liste">
+      <li>brauchst keinen acer-stuhl mehr — er besitzt schon einen</li>
+      <li>brauchst kein lambo — vault ist voll</li>
+      <li>aber er liebt dich trotzdem (gegen geld)</li>
+      <li>aura wird offiziell anerkannt</li>
+    </ul>
+    <button class="kuckuck-btn" id="kuckuck-spende-btn">💎 KUCKUCK UNTERSTÜTZEN</button>
+    <div class="winzig">
+      sofort wirksam · komplett legal* (*nicht juristisch geprüft)
+    </div>
+  </div>
+</section>
+
+<!-- =============================================================
+     ACTION BAR: MINIGAMES + KI-BILD GENERATOR
+     ============================================================= -->
+<section class="action-bar">
+  <a href="minigames/index.html" class="action-btn action-btn--minigames">
+    <span class="ecke-tag">3 SPIELE</span>
+    <span class="emoji">🎮</span>
+    <span class="titel">MINIGAMES</span>
+    <span class="sub">Aura-Clicker · Reaction Test · Find Steve</span>
+  </a>
+  <button class="action-btn action-btn--ki" id="ki-btn">
+    <span class="ecke-tag">KI-POWERED</span>
+    <span class="emoji">🎨</span>
+    <span class="titel">KUCKUCK KI-BILD GENERATOR</span>
+    <span class="sub">erstelle eigene Akten-Bilder — KOSTENLOS! · auch für dich!</span>
+  </button>
+</section>
+
+<!-- =============================================================
+     BEWEISMITTELKAMMER
+     ============================================================= -->
+<section class="section">
+  <h3>BEWEISMITTELKAMMER</h3>
+  <div class="sub">— Asservatenkammer. Material wurde von der BEGV sichergestellt. Bei Verlust: Fragen Sie nicht. —</div>
+
+  <div class="evidence-wall">
+
+    <div class="evidence" style="--rot: -3deg;">
+      <img src="img/haarvorfall.png" alt="">
+      <div class="tag"><b>014-A</b> · "Großer Haarverlust", sichergestellt 14.04.2026<br>Lieferant: anonym</div>
+    </div>
+
+    <div class="evidence" style="--rot: 4deg;">
+      <img src="img/wildschwein.png" alt="">
+      <div class="tag"><b>051-W</b> · A3 Richtung Köln, geschätzt 140 km/h<br>Lieferant: Autobahnpolizei</div>
+    </div>
+
+    <div class="evidence" style="--rot: -2deg;">
+      <img src="img/lambo-vault-1.png" alt="">
+      <div class="tag"><b>081-L</b> · Mutmaßliche Garage, Standort geheim<br>Finanzamt: verschwunden</div>
+    </div>
+
+    <div class="evidence" style="--rot: 5deg;">
+      <img src="img/lambo-vault-2.png" alt="">
+      <div class="tag"><b>081-L2</b> · Selber Standort, andere Aura<br>Lieferant: Drohnen-Aufnahme</div>
+    </div>
+
+    <div class="evidence" style="--rot: -4deg;">
+      <img src="img/baumrettung.png" alt="">
+      <div class="tag"><b>099-B</b> · Sturm in Berlin, "warte kurz"<br>Lieferant: einGDNoob</div>
+    </div>
+
+    <div class="evidence" style="--rot: 3deg;">
+      <img src="img/demon-grind.png" alt="">
+      <div class="tag"><b>060-Z</b> · Full Zoinkification dokumentiert<br>Klassifizierung: NICHT MENSCHLICH</div>
+    </div>
+
+    <div class="evidence" style="--rot: -2deg;">
+      <img src="img/parfuem-creed.png" alt="">
+      <div class="tag"><b>072-P</b> · "Kartell"-Duftanlage<br>Verdacht: Schwarzmarkt</div>
+    </div>
+
+    <div class="evidence" style="--rot: 6deg;">
+      <img src="img/kartell-boss.png" alt="">
+      <div class="tag"><b>077-K</b> · Eigene Parfüm-Marke "KARTELL BOSS"<br>Lizenz: keine</div>
+    </div>
+
+    <div class="evidence" style="--rot: -5deg;">
+      <img src="img/bleu-chanel.png" alt="">
+      <div class="tag"><b>072-X</b> · Industriespionage Chanel?<br>Untersuchung läuft</div>
+    </div>
+
+    <div class="evidence" style="--rot: 2deg;">
+      <img src="img/battle-48h.png" alt="">
+      <div class="tag"><b>044-R</b> · 48H Battle Endstand<br>Inhalt entfernt — Vorschau ausgenommen</div>
+    </div>
+
+    <div class="evidence" style="--rot: -3deg;">
+      <img src="img/sonnen-kuckuck.png" alt="">
+      <div class="tag"><b>053-S</b> · Astronomische Anomalie<br>NASA: keine Stellungnahme</div>
+    </div>
+
+    <div class="evidence" style="--rot: 4deg;">
+      <img src="img/baby-lolli.png" alt="">
+      <div class="tag"><b>084-L</b> · Kindheitsarchiv, ca. 1996<br>Authentizität: 100%</div>
+    </div>
+
+    <div class="evidence" style="--rot: -4deg;">
+      <img src="img/crazy-leaderboard.png" alt="">
+      <div class="tag"><b>092-C</b> · Leaderboard-Screenshot<br>Verifizierung: läuft seit 2019</div>
+    </div>
+
+    <div class="evidence" style="--rot: 3deg;">
+      <img src="img/arctic-lights.png" alt="">
+      <div class="tag"><b>095-A</b> · Unter 1.5K Attempts<br>Statistik: weint</div>
+    </div>
+
+    <div class="evidence" style="--rot: -2deg;">
+      <img src="img/how-to-plattformer-1.png" alt="">
+      <div class="tag"><b>101-T1</b> · "Tutorial-Material"<br>Glaubwürdigkeit: 0%</div>
+    </div>
+
+    <div class="evidence" style="--rot: 5deg;">
+      <img src="img/how-to-plattformer-2.png" alt="">
+      <div class="tag"><b>101-T2</b> · Fortsetzung, 6 Stunden<br>(vermutlich 6 Sekunden)</div>
+    </div>
+
+    <div class="evidence" style="--rot: -3deg;">
+      <img src="img/skibidi-toilet.png" alt="">
+      <div class="tag"><b>047-B</b> · Brainrot-Beweis<br>Klassifizierung: GENERATIONELL</div>
+    </div>
+
+    <div class="evidence" style="--rot: 4deg;">
+      <img src="img/uwu-anime.png" alt="">
+      <div class="tag"><b>117-U</b> · Unbekannte Person in Kuckucks Setup<br>Identität: <b>UNKLAR</b></div>
+    </div>
+
+    <div class="evidence" style="--rot: -4deg;">
+      <img src="img/triple-t-bald.png" alt="">
+      <div class="tag"><b>T-001</b> · Triple-T (Aura-Aufnahme)<br>Sichtbarkeit: instabil</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =============================================================
+     WERBUNG 3 — BAMBILAND THEMENPARK
+     ============================================================= -->
+<a class="werbung werbung--bambiland" href="#" onclick="zeigeBambilandModal(); return false;">
+  <div class="links">
+    <div class="emoji">🦌</div>
+    <div class="badge" style="background:#39ff14; color:#000; border-color:#000;">ERÖFFNUNG!</div>
+  </div>
+  <div class="rechts">
+    <div class="sterne">★★★★★ (1 Bewertung — von Kuckuck)</div>
+    <div class="titel">BAMBILAND — Deutschlands 1. GD-Themenpark</div>
+    <div class="text">
+      🦋 Erlebe die offizielle Bambiland-Zone (bekannt aus Akte <b>#003</b>)<br>
+      🦋 Streichle echte Rehe. Lass dich von Schmetterlingen zu deinen "kleinen Zuschauern" ernennen.<br>
+      🦋 Pinke Kopfhörer am Eingang erhältlich (Pflicht).<br>
+      🦋 Tickets ab nur <b>99€</b> (Erwachsene). Kinder: 199€. Aura-Verstärkung inkludiert.
+    </div>
+    <span class="cta">▸ JETZT TICKETS SICHERN</span>
+  </div>
+</a>
+
+<!-- =============================================================
+     WERBUNG 4 — ACER-STUHL (klein)
+     ============================================================= -->
+<a class="werbung werbung--acer" href="https://www.acer.com/de-de/" target="_blank" rel="noopener">
+  <div class="links">
+    <div class="emoji">🪑</div>
+    <div class="badge">ZEUGENSCHUTZ</div>
+  </div>
+  <div class="rechts">
+    <div class="sterne">★★★★★ (verifiziert)</div>
+    <div class="titel">Der ORIGINAL Acer-Stuhl</div>
+    <div class="text">
+      🪑 <b>Verwendet von 1 (!) Streamer</b> — exklusive Aura-Verstärker-Technologie.<br>
+      🪑 Hält Diskussionen mit dem Besitzer aus (siehe Dossier #028).<br>
+      🪑 Bietet 240kg-Bizeps-Trainings-Toleranz (siehe #031).<br>
+      🪑 <i>"der stuhl bittet um asyl." — anonymer Mitarbeiter</i>
+    </div>
+    <span class="cta">▸ KONFIGURIEREN</span>
+  </div>
+</a>
+
+<!-- =============================================================
+     WERBUNG 5 — ELE SPONGEBOB
+     ============================================================= -->
+<a class="werbung" href="https://youtu.be/9XSONr2tCDQ?si=VEckeVGeErufbd-P&amp;t=22" target="_blank" rel="noopener" style="background: linear-gradient(135deg, #ffe600 0%, #ff8c00 100%); border-color: #b8000f;">
+  <div class="links">
+    <div class="emoji">🧽</div>
+    <div class="badge" style="background:#b8000f; color:#fff; border-color:#000;">#1 HIT</div>
+  </div>
+  <div class="rechts">
+    <div class="sterne">★★★★★ · 9× heute gespielt (von plexi)</div>
+    <div class="titel" style="color:#b8000f;">ELE SPONGEBOB — Jetzt anhören!</div>
+    <div class="text">
+      🧽 Die <b>einzige Hintergrundmusik</b>, die in Bunker 7 zugelassen ist.<br>
+      🧽 Beweis aus Dossiers <b>#014, #028, #047, #112</b>: läuft IMMER.<br>
+      🧽 Soundtrack zu jedem Mental Breakdown garantiert.<br>
+      🧽 Empfohlen von: <i>plexi · plexi · plexi · plexi · plexi · plexi · plexi · plexi · plexi</i>
+    </div>
+    <span class="cta">▸ ABSPIELEN (ab Sekunde 22)</span>
+  </div>
+</a>
+
+<!-- =============================================================
+     WERBUNG 6 — TUNG TUNG TUNG HOLZ
+     ============================================================= -->
+<a class="werbung werbung--tung" href="https://youtu.be/HmIMmFAV4BY?si=y5_LsXuBNpuwc_Pm" target="_blank" rel="noopener">
+  <div class="links">
+    <div class="emoji">🪵</div>
+    <div class="badge" style="background:#8b4513; color:#fff; border-color:#000;">PREMIUM</div>
+  </div>
+  <div class="rechts">
+    <div class="sterne">★★★★★</div>
+    <div class="titel">TUNG TUNG TUNG SAHUR — Original Holz</div>
+    <div class="text">
+      🪵 Jetzt in <b>Premium-Eiche</b> erhältlich. Italienische Brainrot-Herkunft.<br>
+      🪵 Empfohlen von Triple-T (= Tung Tung Tung Sahur, siehe Personen-Wand).<br>
+      🪵 <b>Achtung:</b> Holz kann sprechen. Hört nicht auf zu sprechen.
+    </div>
+    <span class="cta">▸ BESTELLEN</span>
+  </div>
+</a>
+
+<!-- =============================================================
+     WERBUNG 7 — BOMBPARTY (BESTES MINIGAME EVER)
+     ============================================================= -->
+<a class="werbung" href="https://jklm.fun/" target="_blank" rel="noopener" style="background: linear-gradient(135deg, #ff3a8c 0%, #ffe600 50%, #ff8c00 100%); border-color: #000; border-width: 6px; animation: blink-color 1.5s infinite;">
+  <div class="links">
+    <div class="emoji">💣</div>
+    <div class="badge" style="background:#000; color:#ffe600; border-color:#ffe600; font-size:14px; padding:6px 14px;">GOAT</div>
+  </div>
+  <div class="rechts">
+    <div class="sterne">★★★★★ ★★★★★ ★★★★★ (∞/10)</div>
+    <div class="titel" style="color:#000; font-size:28px; text-shadow: 2px 2px 0 #fff;">BESTES MINIGAME EVER</div>
+    <div class="text" style="color:#1a1410; font-weight:600;">
+      💣 jklm.fun/bombparty — das eigentliche beste minigame.<br>
+      💣 NICHT von uns. aber wir mussten es trotzdem promoten weil es einfach so gut ist.<br>
+      💣 unsere minigames? gut. dieses hier? besser.<br>
+      💣 vorsicht: kann süchtig machen. ehrlich.
+    </div>
+    <span class="cta" style="background: linear-gradient(180deg, #000 0%, #2a2a2a 100%); color: #ffe600; border-color: #ffe600;">▸ JETZT BOMBPARTY SPIELEN</span>
+  </div>
+</a>
+
+<!-- =============================================================
+     SICHTUNG MELDEN
+     ============================================================= -->
+<section class="section">
+  <h3>SICHTUNG MELDEN</h3>
+  <div class="sub">— Vertraulich. Anonym. Wird systematisch weggeweht. —</div>
+
+  <form class="form-box" id="meldung-form" onsubmit="return false;">
+    <label>Pseudonym (anonym empfohlen)</label>
+    <input type="text" placeholder="z.B. plexi42" value="">
+
+    <label>Wo hast du die Sichtung gemacht?</label>
+    <select>
+      <option>Geometry Dash Stream</option>
+      <option>Bambiland</option>
+      <option>Autobahn A3</option>
+      <option>Lokales Parfüm-Geschäft</option>
+      <option>Acer-Stuhl-Werk</option>
+      <option>Im Spiegel (vermutlich Triple-T)</option>
+      <option>Bunker 7, Köln</option>
+      <option>NIRGENDWO — ich habe nichts gesehen</option>
+    </select>
+
+    <label>Aura-Level der Sichtung (0 – 9999)</label>
+    <input type="range" min="0" max="9999" value="7777">
+    <div class="hinweis">Werte über 9000 müssen separat gemeldet werden.</div>
+
+    <label>War der Acer-Stuhl involviert?</label>
+    <div class="radio-zeile">
+      <label><input type="radio" name="acer"> Ja</label>
+      <label><input type="radio" name="acer"> Nein</label>
+      <label><input type="radio" name="acer" checked> Ja, aggressiv</label>
+      <label><input type="radio" name="acer"> Acer-Stuhl hat sich selbst gemeldet</label>
+    </div>
+
+    <label>Lief ELE SPONGEBOB?</label>
+    <div class="radio-zeile">
+      <label><input type="checkbox" checked> Ja, mindestens 1x</label>
+      <label><input type="checkbox"> plexi war es</label>
+      <label><input type="checkbox" checked> plexi war es trotzdem</label>
+    </div>
+
+    <label>Bemerkungen</label>
+    <textarea rows="4" placeholder="z.B. 'Wave-Part kam aus dem Nichts'"></textarea>
+
+    <button type="submit" id="meldung-submit">MELDUNG ABSCHICKEN</button>
+    <div class="hinweis">Mit dem Absenden bestätigst du, dass deine Meldung niemals beachtet wird.</div>
+  </form>
+</section>
+
+<!-- =============================================================
+     MODAL (AKTEN-DETAIL)
+     ============================================================= -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal" id="modal">
+    <button class="close" id="modal-close">✕</button>
+    <div id="modal-inhalt"><!-- wird per JS gefüllt --></div>
+  </div>
+</div>
+
+<!-- =============================================================
+     GAMBLEAUTOMAT — MEGA BUTTON
+     ============================================================= -->
+<section class="gamble-mega">
+  <a href="gamble.html" class="gamble-btn">
+    <span class="bling">🎰</span>GAMBLEAUTOMAT<span class="bling">🎰</span>
+  </a>
+  <span class="sub">
+    100 Baft-Coins gratis · Jackpot bis 100× · Aura-zertifiziert · Lizenz: keine
+  </span>
+</section>
+
+<!-- =============================================================
+     FOOTER MIT EASTER-EGG-LINKS
+     ============================================================= -->
+<footer>
+  <h4>BUNDESERMITTLUNGSSTELLE FÜR GEOMETRY-DASH-VORFÄLLE</h4>
+  <div class="disclaim">
+    Diese Seite wurde NICHT von KI generiert.<br>Maximal von Aura.
+  </div>
+  <div class="counter" id="counter">TAGE SEIT LETZTEM WAVE-CARRIED-VORFALL: 0</div>
+
+  <div class="footer-grid">
+    <div>
+      <h5>BEHÖRDE</h5>
+      <a href="#">Über uns (geschlossen)</a>
+      <a href="#">Karriere (alle weggeweht)</a>
+      <a href="https://www.google.com/search?q=Waschmaschine+reparieren" target="_blank" rel="noopener">Technischer Support</a>
+      <a href="https://de.wikipedia.org/wiki/B%C3%BCrokratie" target="_blank" rel="noopener">Bearbeitungszeit beschleunigen</a>
+      <a href="akten/044-verboten.html">Impressum</a>
+    </div>
+    <div>
+      <h5>RECHTLICH</h5>
+      <a href="#">Datenschutz (keine Daten)</a>
+      <a href="#">Nutzungsbedingungen (verbindlich aber unleserlich)</a>
+      <a href="#">Whistleblower-Schutz (ausverkauft)</a>
+      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">Hilfe &amp; FAQ</a>
+      <a href="https://www.wikihow.com/Complain-Effectively" target="_blank" rel="noopener">Beschwerde einreichen</a>
+    </div>
+    <div>
+      <h5>QUELLEN</h5>
+      <a href="https://youtu.be/9XSONr2tCDQ?si=VEckeVGeErufbd-P&amp;t=22" target="_blank" rel="noopener">Hintergrundmusik der Behörde</a>
+      <a href="https://youtu.be/HmIMmFAV4BY?si=y5_LsXuBNpuwc_Pm" target="_blank" rel="noopener">Tung-Tung-Tung-Sahur-Hommage</a>
+      <a href="https://store.steampowered.com/app/322170/Geometry_Dash/" target="_blank" rel="noopener">Geometry Dash beschaffen</a>
+      <a href="https://www.lamborghini.com/de-en/configure/huracan-evo-spyder" target="_blank" rel="noopener">Lambo konfigurieren (Vault-Vorbereitung)</a>
+      <a href="marbles.html">Marbles-Antrag stellen</a>
+      <a href="#">Anti-Aura-Schutzwesten bestellen</a>
+    </div>
+    <div>
+      <h5>LEVEL-DATENBANK</h5>
+      <a href="https://www.google.com/search?q=geometry+dash+Shukufuku" target="_blank" rel="noopener">Shukufuku</a>
+      <a href="https://www.google.com/search?q=geometry+dash+Delightful+Blossoms" target="_blank" rel="noopener">Delightful Blossoms</a>
+      <a href="https://www.google.com/search?q=geometry+dash+Niwa" target="_blank" rel="noopener">Niwa</a>
+      <a href="https://www.google.com/search?q=geometry+dash+Delta+Interface" target="_blank" rel="noopener">Delta Interface</a>
+      <a href="https://www.google.com/search?q=geometry+dash+Black+Blizzard" target="_blank" rel="noopener">Black Blizzard</a>
+      <a href="https://www.google.com/search?q=geometry+dash+Astral+Divinity" target="_blank" rel="noopener">Astral Divinity</a>
+      <a href="https://www.acer.com/de-de/" target="_blank" rel="noopener">Acer-Stuhl Garantie</a>
+      <a href="https://www.monsterenergy.com/" target="_blank" rel="noopener">Monster White beschaffen</a>
+    </div>
+  </div>
+
+  <div class="winzig">
+    © 2026 BEGV · Alle Rechte vorbehalten, außer dem auf Marbles<br>
+    Diese Seite enthält Spuren von <span class="geheim-link" id="geheim-trigger">Monster White</span>, Aura, und nicht jugendfreier Bürokratie.<br>
+    Aktuelle Server-Aura: <b>STABIL</b> · ELE-SPONGEBOB-Volume: 9/10 · Tung-Tung-Tung-Sahur vs Kurzhaarmeister Streit-Status: <b>eskaliert</b> · polnischer Zoink Status: <b>= Kuckuck (juristisch geklärt)</b>
+  </div>
+</footer>
+
+<!-- versteckte easter-egg-links die nicht sichtbar sind aber Bots oder Devs finden -->
+<a href="akten/069-geheim.html" style="position: absolute; left: -9999px;">geheim</a>
+
+<script src="js/main.js"></script>
+</body>
+</html>

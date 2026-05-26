@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAFT-COIN GAMBLEAUTOMAT — BEGV (illegal aber okay)</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  body { background: #0a0807 !important; }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse at top, rgba(255, 230, 0, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(255, 58, 140, 0.12) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .casino-hero {
+    text-align: center;
+    padding: 40px 20px 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .casino-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(48px, 9vw, 110px);
+    letter-spacing: 6px;
+    color: #ffe600;
+    text-shadow:
+      0 0 20px #ffe600,
+      0 0 50px #ff3a8c,
+      4px 4px 0 #b8000f;
+    animation: neon-flicker 3s infinite;
+  }
+  @keyframes neon-flicker {
+    0%, 100% { opacity: 1; }
+    96% { opacity: 1; }
+    97% { opacity: 0.6; }
+    98% { opacity: 1; }
+    99% { opacity: 0.7; }
+  }
+  .casino-sub {
+    color: #c9a85a;
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    margin-top: 6px;
+  }
+
+  .balance-bar {
+    background: linear-gradient(180deg, #2a160c 0%, #1a0805 100%);
+    border: 3px solid #c9a85a;
+    border-radius: 8px;
+    padding: 18px 24px;
+    max-width: 800px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 0 30px rgba(255, 230, 0, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+  .balance-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #c9a85a;
+    text-transform: uppercase;
+  }
+  .balance-wert {
+    font-family: 'Anton', sans-serif;
+    font-size: 40px;
+    letter-spacing: 3px;
+    color: #ffe600;
+    text-shadow: 0 0 12px #ffe600;
+  }
+  .balance-wert.weniger { color: #ff5050; text-shadow: 0 0 12px #ff5050; }
+  .balance-wert.viel { color: #2bff52; text-shadow: 0 0 16px #2bff52; }
+
+  .bet-selector { display: flex; gap: 8px; }
+  .bet-btn {
+    background: #1a1410;
+    color: #c9a85a;
+    border: 2px solid #c9a85a;
+    padding: 8px 14px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .bet-btn.aktiv {
+    background: #c9a85a;
+    color: #1a1410;
+    box-shadow: 0 0 16px #c9a85a;
+  }
+
+  .slot-machine {
+    background: linear-gradient(180deg, #ff3a8c 0%, #b8000f 100%);
+    border: 6px solid #ffe600;
+    max-width: 720px;
+    margin: 30px auto;
+    padding: 30px 24px;
+    border-radius: 14px;
+    box-shadow:
+      0 0 50px rgba(255, 58, 140, 0.5),
+      inset 0 0 30px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 1;
+  }
+  .slot-machine::before, .slot-machine::after {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    background: radial-gradient(circle at 30% 30%, #fff, #ffd0d0);
+    border-radius: 50%;
+    top: 14px;
+    animation: bulb 1.2s infinite alternate;
+    box-shadow: 0 0 12px #fff;
+  }
+  .slot-machine::before { left: 18px; }
+  .slot-machine::after { right: 18px; animation-delay: 0.6s; }
+  @keyframes bulb {
+    from { opacity: 0.3; }
+    to { opacity: 1; }
+  }
+
+  .reels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    background: #1a0805;
+    padding: 16px;
+    border: 3px solid #ffe600;
+    border-radius: 8px;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+  }
+  .reel {
+    background: #fff;
+    height: 130px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 6px;
+    box-shadow: inset 0 4px 12px rgba(0,0,0,0.3), inset 0 -4px 12px rgba(0,0,0,0.3);
+  }
+  .reel-inner {
+    position: absolute;
+    left: 0; right: 0;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .reel-inner.spinning {
+    transition: transform 2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  }
+  .reel-symbol {
+    height: 130px;
+    display: grid;
+    place-items: center;
+    font-size: 80px;
+    line-height: 1;
+  }
+  .reel.winner {
+    animation: win-glow 0.5s infinite alternate;
+  }
+  @keyframes win-glow {
+    from { box-shadow: 0 0 0 rgba(255, 230, 0, 0), inset 0 4px 12px rgba(0,0,0,0.3), inset 0 -4px 12px rgba(0,0,0,0.3); }
+    to { box-shadow: 0 0 30px #ffe600, inset 0 4px 12px rgba(0,0,0,0.3), inset 0 -4px 12px rgba(0,0,0,0.3); }
+  }
+
+  .controls {
+    margin-top: 22px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .spin-btn {
+    background: linear-gradient(180deg, #ffe600 0%, #c49a00 100%);
+    color: #1a1410;
+    border: 4px solid #fff;
+    padding: 18px 50px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 5px;
+    font-size: 26px;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 6px 0 #8b6f00, 0 10px 20px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 0 #fff;
+    transition: transform 0.1s;
+  }
+  .spin-btn:hover { transform: translateY(-2px); }
+  .spin-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #8b6f00, 0 4px 10px rgba(0,0,0,0.5); }
+  .spin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .secondary-btn {
+    background: #1a0805;
+    color: #c9a85a;
+    border: 2px solid #c9a85a;
+    padding: 14px 22px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .secondary-btn:hover { background: #c9a85a; color: #1a0805; }
+  .danger-btn { border-color: #ff5050; color: #ff5050; }
+  .danger-btn:hover { background: #ff5050; color: #1a0805; }
+
+  .message {
+    margin: 30px auto;
+    max-width: 720px;
+    text-align: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: #fff;
+    min-height: 50px;
+    text-shadow: 2px 2px 0 #000;
+    position: relative;
+    z-index: 1;
+  }
+  .message.win { color: #2bff52; text-shadow: 0 0 20px #2bff52, 2px 2px 0 #000; animation: bounce-in 0.5s; }
+  .message.jackpot { color: #ffe600; font-size: 38px; text-shadow: 0 0 30px #ffe600, 2px 2px 0 #000; animation: jackpot-pulse 0.6s infinite alternate; }
+  .message.loss { color: #ff5050; }
+  @keyframes bounce-in {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes jackpot-pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+  }
+
+  .shop {
+    background: #1a1410;
+    border: 3px dashed #c9a85a;
+    max-width: 720px;
+    margin: 40px auto;
+    padding: 24px;
+    border-radius: 10px;
+    color: #c9a85a;
+    position: relative;
+    z-index: 1;
+  }
+  .shop h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: #ffe600;
+    text-align: center;
+    margin-bottom: 16px;
+    border: none;
+  }
+  .shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  .shop-card {
+    background: linear-gradient(135deg, #2a160c 0%, #1a0805 100%);
+    border: 2px solid #c9a85a;
+    padding: 16px;
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #ffe600;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    transition: transform 0.15s;
+  }
+  .shop-card:hover { transform: scale(1.05); box-shadow: 0 0 20px #ffe600; }
+  .shop-card .preis {
+    font-size: 22px;
+    color: #ffe600;
+    margin-bottom: 4px;
+  }
+  .shop-card .menge {
+    font-size: 14px;
+    color: #c9a85a;
+    letter-spacing: 1.5px;
+  }
+  .shop-card .echtgeld {
+    margin-top: 8px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: #888;
+  }
+
+  .stats {
+    max-width: 720px;
+    margin: 30px auto;
+    padding: 18px;
+    background: rgba(26, 8, 5, 0.6);
+    border: 1px solid #4a3a26;
+    border-radius: 8px;
+    color: #c9a85a;
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    position: relative;
+    z-index: 1;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .stats div b { display: block; color: #ffe600; font-size: 18px; font-family: 'Anton', sans-serif; letter-spacing: 1.5px; }
+
+  .disclaimer-casino {
+    max-width: 720px;
+    margin: 40px auto 20px;
+    text-align: center;
+    color: #555;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .coin-rain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9990;
+    overflow: hidden;
+  }
+  .coin {
+    position: absolute;
+    font-size: 32px;
+    animation: coin-fall 3s linear forwards;
+  }
+  @keyframes coin-fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0.5; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gov-bar">
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/gamble — NICHT OFFIZIELL GENEHMIGT</span>
+  <span>Aufsichtsbehörde: niemand · Lizenz: keine</span>
+</div>
+
+<header class="behoerde">
+  <a href="index.html" style="text-decoration:none;"><div class="wappen">K</div></a>
+  <h1>BAFT-COIN AUTOMAT
+    <small>OFFIZIELL TOLERIERTE GAMBLING-ECKE DER BEGV — KOLLABORATION MIT KARTELL BOSS</small>
+  </h1>
+  <div class="right">
+    <a href="index.html" style="color:#c9a85a; text-decoration:none; font-size:11px; letter-spacing:1px;">▸ ZURÜCK INS ARCHIV</a>
+  </div>
+</header>
+
+<section class="casino-hero">
+  <div class="casino-title">GAMBLEAUTOMAT</div>
+  <div class="casino-sub">— betreuung durch jughead, finanziert durch parfüm-kartell —</div>
+</section>
+
+<div class="balance-bar">
+  <div>
+    <div class="balance-label">DEIN BAFT-COIN STAND</div>
+    <div class="balance-wert" id="balance">100</div>
+  </div>
+  <div>
+    <div class="balance-label">EINSATZ</div>
+    <div class="bet-selector">
+      <button class="bet-btn aktiv" data-bet="10">10</button>
+      <button class="bet-btn" data-bet="50">50</button>
+      <button class="bet-btn" data-bet="100">100</button>
+      <button class="bet-btn" data-bet="500">500</button>
+    </div>
+  </div>
+</div>
+
+<div class="slot-machine">
+  <div class="reels">
+    <div class="reel"><div class="reel-inner" id="reel-0"></div></div>
+    <div class="reel"><div class="reel-inner" id="reel-1"></div></div>
+    <div class="reel"><div class="reel-inner" id="reel-2"></div></div>
+  </div>
+  <div class="controls">
+    <button class="spin-btn" id="spin-btn">▸ SPIN</button>
+  </div>
+  <div class="controls" style="margin-top: 10px;">
+    <button class="secondary-btn" id="double-btn" disabled>DOUBLE OR NOTHING</button>
+    <button class="secondary-btn danger-btn" id="all-btn">ALL IN</button>
+  </div>
+</div>
+
+<div class="message" id="message">setze deinen einsatz und drück SPIN</div>
+
+<div class="shop">
+  <h3>🪙 BAFT-COIN SHOP 🪙</h3>
+  <div class="shop-grid">
+    <a class="shop-card" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">
+      <div class="preis">100</div>
+      <div class="menge">BAFT-COINS</div>
+      <div class="echtgeld">nur 4,99€</div>
+    </a>
+    <a class="shop-card" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">
+      <div class="preis">1000</div>
+      <div class="menge">BAFT-COINS</div>
+      <div class="echtgeld">nur 39,99€ (BELIEBT)</div>
+    </a>
+    <a class="shop-card" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">
+      <div class="preis">10000</div>
+      <div class="menge">BAFT-COINS</div>
+      <div class="echtgeld">399,99€ — VAULT-EDITION</div>
+    </a>
+    <a class="shop-card" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener" style="border-color:#ff3a8c;">
+      <div class="preis" style="color:#ff3a8c;">∞</div>
+      <div class="menge">AURA-PASS</div>
+      <div class="echtgeld">1.999,99€/Monat</div>
+    </a>
+  </div>
+  <div style="text-align:center; margin-top:14px; font-family:'Caveat',cursive; font-size:16px; color:#888;">
+    *Käufe sind nicht rückerstattbar. Akzeptierte Zahlungsmittel: PayPal, Klarna, Aura, Schmetterlinge.
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stats-grid">
+    <div><b id="stat-spins">0</b><span>SPINS TOTAL</span></div>
+    <div><b id="stat-wins">0</b><span>WINS</span></div>
+    <div><b id="stat-jackpots">0</b><span>JACKPOTS</span></div>
+    <div><b id="stat-biggest">0</b><span>GRÖSSTER WIN</span></div>
+    <div><b id="stat-loss">0</b><span>NETTO-VERLUST</span></div>
+    <div><b id="stat-time">0:00</b><span>ZEIT VERSCHWENDET</span></div>
+  </div>
+  <div style="text-align:center; margin-top:14px;">
+    <button class="secondary-btn" id="reset-btn">⚠ ACCOUNT ZURÜCKSETZEN (100 Baft-Coins)</button>
+    <a class="secondary-btn" href="https://de.wikipedia.org/wiki/Pathologisches_Spielen" target="_blank" rel="noopener" style="text-decoration:none; display:inline-block; margin-left:8px;">📞 BERATUNG IN ANSPRUCH NEHMEN</a>
+  </div>
+</div>
+
+<div class="disclaimer-casino">
+  Dieser Automat wurde nicht von einer Aufsichtsbehörde geprüft. Die Aufsichtsbehörde wurde ebenfalls weggeweht.<br>
+  Baft-Coins haben keinen monetären Wert. Außer für Kuckuck. Aber er gibt sie nicht raus.<br>
+  Bei Problemen wenden Sie sich an Jughead. (Er wird nicht antworten.)<br>
+  © 2026 BEGV / Kartell Boss Holding · Lizenz: laufende Prüfung seit 2019
+</div>
+
+<div class="coin-rain" id="coin-rain"></div>
+
+<script>
+// =================================================================
+// BAFT-COIN GAMBLEAUTOMAT
+// =================================================================
+
+// SYMBOLE mit weights (häufigkeit) und payouts (multiplier für 3-of-a-kind)
+const SYMBOLE = [
+  { emoji: '⚡', name: 'aura',        weight: 10, payout3: 3,    payout2: 0.5 },
+  { emoji: '🐗', name: 'wildschwein', weight: 7,  payout3: 5,    payout2: 0.8 },
+  { emoji: '🦌', name: 'bambi',       weight: 6,  payout3: 8,    payout2: 1 },
+  { emoji: '🧽', name: 'ele',         weight: 6,  payout3: 10,   payout2: 1.5 },
+  { emoji: '🎧', name: 'kopfhörer',   weight: 5,  payout3: 15,   payout2: 2 },
+  { emoji: '🔥', name: 'wave',        weight: 3,  payout3: 25,   payout2: 3 },
+  { emoji: '🚗', name: 'lambo',       weight: 2,  payout3: 50,   payout2: 5 },
+  { emoji: '💎', name: 'jackpot',     weight: 1,  payout3: 100,  payout2: 10 }
+];
+
+// gewichteter zufall
+function ziehe() {
+  const total = SYMBOLE.reduce((s, x) => s + x.weight, 0);
+  let r = Math.random() * total;
+  for (const s of SYMBOLE) {
+    r -= s.weight;
+    if (r <= 0) return s;
+  }
+  return SYMBOLE[0];
+}
+
+// STATE
+const state = {
+  balance: parseInt(localStorage.getItem('baft-coins') || '100', 10),
+  bet: 10,
+  spins: parseInt(localStorage.getItem('baft-spins') || '0', 10),
+  wins: parseInt(localStorage.getItem('baft-wins') || '0', 10),
+  jackpots: parseInt(localStorage.getItem('baft-jackpots') || '0', 10),
+  biggest: parseInt(localStorage.getItem('baft-biggest') || '0', 10),
+  loss: parseInt(localStorage.getItem('baft-loss') || '0', 10),
+  startZeit: Date.now(),
+  letzterWin: 0,
+  spinning: false
+};
+
+// ELEMENTS
+const $balance = document.getElementById('balance');
+const $msg = document.getElementById('message');
+const $spinBtn = document.getElementById('spin-btn');
+const $doubleBtn = document.getElementById('double-btn');
+const $allBtn = document.getElementById('all-btn');
+const $resetBtn = document.getElementById('reset-btn');
+
+// SETUP REELS
+function fuelleReel(reelEl) {
+  // 20 zufällige symbole untereinander, dann am ende das ergebnis
+  let html = '';
+  for (let i = 0; i < 25; i++) {
+    html += `<div class="reel-symbol">${ziehe().emoji}</div>`;
+  }
+  reelEl.innerHTML = html;
+  reelEl.style.transform = 'translateY(0)';
+}
+for (let i = 0; i < 3; i++) {
+  fuelleReel(document.getElementById('reel-' + i));
+}
+
+// BET-BUTTONS
+document.querySelectorAll('.bet-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    if (state.spinning) return;
+    state.bet = parseInt(b.dataset.bet, 10);
+    document.querySelectorAll('.bet-btn').forEach(x => x.classList.remove('aktiv'));
+    b.classList.add('aktiv');
+  });
+});
+
+// BALANCE RENDERN
+function rendereBalance() {
+  $balance.textContent = state.balance;
+  $balance.classList.remove('weniger', 'viel');
+  if (state.balance < 50) $balance.classList.add('weniger');
+  else if (state.balance > 500) $balance.classList.add('viel');
+  localStorage.setItem('baft-coins', state.balance);
+  rendereStats();
+}
+
+function rendereStats() {
+  document.getElementById('stat-spins').textContent = state.spins;
+  document.getElementById('stat-wins').textContent = state.wins;
+  document.getElementById('stat-jackpots').textContent = state.jackpots;
+  document.getElementById('stat-biggest').textContent = state.biggest;
+  document.getElementById('stat-loss').textContent = state.loss;
+  const sek = Math.floor((Date.now() - state.startZeit) / 1000);
+  const m = Math.floor(sek / 60);
+  const s = sek % 60;
+  document.getElementById('stat-time').textContent = m + ':' + String(s).padStart(2,'0');
+  localStorage.setItem('baft-spins', state.spins);
+  localStorage.setItem('baft-wins', state.wins);
+  localStorage.setItem('baft-jackpots', state.jackpots);
+  localStorage.setItem('baft-biggest', state.biggest);
+  localStorage.setItem('baft-loss', state.loss);
+}
+setInterval(rendereStats, 1000);
+
+// SPIELE EINEN SPIN
+function spin() {
+  if (state.spinning) return;
+  if (state.balance < state.bet) {
+    $msg.className = 'message loss';
+    $msg.textContent = 'KEINE COINS MEHR. KAUF NEUE IM SHOP.';
+    return;
+  }
+  state.spinning = true;
+  state.balance -= state.bet;
+  state.spins++;
+  rendereBalance();
+  $msg.className = 'message';
+  $msg.textContent = 'spinning...';
+  document.querySelectorAll('.reel').forEach(r => r.classList.remove('winner'));
+  $spinBtn.disabled = true;
+  $doubleBtn.disabled = true;
+
+  // ergebnis bestimmen
+  const result = [ziehe(), ziehe(), ziehe()];
+
+  // reels animieren
+  for (let i = 0; i < 3; i++) {
+    const reel = document.getElementById('reel-' + i);
+    // setze zum schluss das ergebnis-symbol
+    let html = '';
+    for (let j = 0; j < 30; j++) {
+      html += `<div class="reel-symbol">${ziehe().emoji}</div>`;
+    }
+    // letztes symbol ist garantiert das result
+    html += `<div class="reel-symbol">${result[i].emoji}</div>`;
+    reel.innerHTML = html;
+    // sofort nach oben
+    reel.style.transition = 'none';
+    reel.style.transform = 'translateY(0)';
+    void reel.offsetHeight;
+    // dann nach unten animieren mit jeweils verzögertem stop
+    setTimeout(() => {
+      reel.classList.add('spinning');
+      reel.style.transform = `translateY(-${30 * 130}px)`;
+    }, 50 + i * 250);
+  }
+
+  // ergebnis auswerten nach animation
+  setTimeout(() => werteAus(result), 50 + 250*2 + 2100);
+}
+
+function werteAus(result) {
+  state.spinning = false;
+  $spinBtn.disabled = false;
+
+  const [a, b, c] = result;
+  let gewinn = 0;
+  let typ = 'loss';
+  let nachricht = '';
+  let winnerIndices = [];
+
+  if (a.name === b.name && b.name === c.name) {
+    // 3-of-a-kind
+    gewinn = state.bet * a.payout3;
+    typ = a.name === 'jackpot' ? 'jackpot' : 'win';
+    nachricht = a.name === 'jackpot'
+      ? `🎰 JACKPOT! +${gewinn} BAFT 🎰`
+      : `3× ${a.emoji} — +${gewinn} BAFT`;
+    winnerIndices = [0, 1, 2];
+    state.wins++;
+    if (a.name === 'jackpot') state.jackpots++;
+  } else if (a.name === b.name || b.name === c.name || a.name === c.name) {
+    // 2-of-a-kind
+    let match;
+    if (a.name === b.name) { match = a; winnerIndices = [0, 1]; }
+    else if (b.name === c.name) { match = b; winnerIndices = [1, 2]; }
+    else { match = a; winnerIndices = [0, 2]; }
+    gewinn = Math.floor(state.bet * match.payout2);
+    if (gewinn > 0) {
+      typ = 'win';
+      nachricht = `2× ${match.emoji} — +${gewinn} BAFT`;
+      state.wins++;
+    } else {
+      typ = 'loss';
+      nachricht = `${a.emoji} ${b.emoji} ${c.emoji} — kein gewinn`;
+    }
+  } else {
+    typ = 'loss';
+    nachricht = mockMessage(result);
+  }
+
+  state.balance += gewinn;
+  state.letzterWin = gewinn;
+  if (gewinn === 0) state.loss += state.bet;
+  else state.loss = Math.max(0, state.loss - (gewinn - state.bet));
+  if (gewinn > state.biggest) state.biggest = gewinn;
+
+  $msg.className = 'message ' + typ;
+  $msg.textContent = nachricht;
+  rendereBalance();
+
+  // glow für gewinner-reels
+  winnerIndices.forEach(i => {
+    const reel = document.querySelectorAll('.reel')[i];
+    reel.classList.add('winner');
+  });
+
+  // double-button enable
+  if (gewinn > 0 && gewinn <= state.balance) {
+    $doubleBtn.disabled = false;
+  }
+
+  // coin-rain bei jackpot
+  if (typ === 'jackpot') {
+    starteCoinRain(80);
+    setTimeout(() => alert('JACKPOT!\n\nDu hast ' + gewinn + ' Baft-Coins gewonnen.\n\nGib sie nicht aus, sie sind dein Glück.\n\n— Kartell Boss'), 600);
+  } else if (typ === 'win' && gewinn >= state.bet * 5) {
+    starteCoinRain(20);
+  }
+
+  // game over check
+  if (state.balance <= 0) {
+    setTimeout(() => {
+      $msg.className = 'message loss';
+      $msg.textContent = 'GAME OVER — kauf neue baft-coins';
+    }, 1000);
+  }
+}
+
+const mockMessages = [
+  'pech. nochmal.', 'fast! nochmal.', 'so nah dran. nochmal.',
+  'wave-part hat dich gecarried — leider in die falsche richtung.',
+  'plexi hat ele spongebob angemacht. das stört den rng.',
+  'jughead wurde weggeweht. nochmal.',
+  'aura zu niedrig. mehr coins einwerfen.',
+  'der acer-stuhl hat geknarzt. ungültiger spin.',
+  'kein gewinn. dafür charakter-aufbau.',
+  'verloren. aber stilvoll.',
+  'das war kein wave-part. trotzdem verloren.',
+  'monster white ausgegangen. nächstes mal vorher tanken.',
+  'fast einen lambo. fast.'
+];
+function mockMessage(result) {
+  return result.map(r => r.emoji).join(' ') + ' — ' + mockMessages[Math.floor(Math.random()*mockMessages.length)];
+}
+
+// DOUBLE OR NOTHING
+$doubleBtn.addEventListener('click', () => {
+  if (state.letzterWin <= 0) return;
+  $doubleBtn.disabled = true;
+  // 50/50 — naja, 45/55
+  if (Math.random() < 0.45) {
+    state.balance += state.letzterWin;
+    state.letzterWin *= 2;
+    $msg.className = 'message win';
+    $msg.textContent = `DOUBLE! +${state.letzterWin / 2} BAFT (jetzt ${state.letzterWin})`;
+    $doubleBtn.disabled = false;
+    if (state.letzterWin > state.biggest) state.biggest = state.letzterWin;
+  } else {
+    state.balance -= state.letzterWin;
+    $msg.className = 'message loss';
+    $msg.textContent = `NOTHING. -${state.letzterWin} BAFT. soll vorkommen.`;
+    state.letzterWin = 0;
+  }
+  rendereBalance();
+});
+
+// ALL IN
+$allBtn.addEventListener('click', () => {
+  if (state.spinning || state.balance <= 0) return;
+  if (!confirm(`ALL IN: setze ${state.balance} Baft-Coins. sicher?\n\n(es ist nicht sicher.)`)) return;
+  state.bet = state.balance;
+  spin();
+});
+
+// RESET
+$resetBtn.addEventListener('click', () => {
+  if (!confirm('Account zurücksetzen?\n\nDu bekommst 100 frische Baft-Coins. Statistiken bleiben erhalten — du musst dich erinnern.')) return;
+  state.balance = 100;
+  rendereBalance();
+  $msg.className = 'message';
+  $msg.textContent = 'frische 100 baft-coins. viel glück. (du brauchst es.)';
+});
+
+// SPIN BUTTON
+$spinBtn.addEventListener('click', spin);
+
+// SPACE KEY = SPIN
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' && !state.spinning && document.activeElement.tagName !== 'BUTTON' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    spin();
+  }
+});
+
+// COIN RAIN
+function starteCoinRain(anzahl) {
+  const rain = document.getElementById('coin-rain');
+  for (let i = 0; i < anzahl; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'coin';
+      c.textContent = ['🪙','💰','💎','🎰'][Math.floor(Math.random()*4)];
+      c.style.left = Math.random() * 100 + '%';
+      c.style.animationDuration = (2 + Math.random()*2) + 's';
+      rain.appendChild(c);
+      setTimeout(() => c.remove(), 4500);
+    }, i * 25);
+  }
+}
+
+rendereBalance();
+
+// CONSOLE EASTER EGG
+console.log('%c💰 BAFT-COIN AUTOMAT', 'background: #ffe600; color: #1a0805; font-size: 24px; padding: 8px 20px; font-weight: bold;');
+console.log('%ctipp: drücke SPACE für SPIN. cheaten geht hier nicht. — naja.', 'color: #c9a85a; font-size: 12px;');
+console.log('%cdu willst cheaten? probiere: gibAuraGib(1000000)', 'color: #888; font-size: 11px;');
+
+window.gibAuraGib = function(n) {
+  state.balance += (n || 1000);
+  rendereBalance();
+  console.log('%c🦌 cheat akzeptiert. jughead wurde informiert. aura: -1000', 'color: #b8000f; font-weight: bold;');
+  return 'aura erhalten. würde verloren.';
+};
+</script>
+
+</body>
+</html>

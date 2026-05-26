@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAVE-PART REACTION TEST — BEGV Minigames</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { background: #0a0807 !important; min-height: 100vh; }
+
+  .arena {
+    max-width: 900px;
+    margin: 30px auto;
+    height: 460px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.05s;
+    position: relative;
+    overflow: hidden;
+    border: 6px solid #4a3a26;
+  }
+  .arena.warten {
+    background: linear-gradient(135deg, #4a0008 0%, #2a0004 100%);
+  }
+  .arena.bereit {
+    background: linear-gradient(135deg, #b8000f 0%, #7a0008 100%);
+    cursor: not-allowed;
+  }
+  .arena.wave {
+    background: linear-gradient(135deg, #2bff52 0%, #1a8a2c 100%);
+    animation: wave-pulse 0.08s infinite alternate;
+  }
+  .arena.zu-frueh {
+    background: linear-gradient(135deg, #ffe600 0%, #c49a00 100%);
+  }
+  @keyframes wave-pulse {
+    from { box-shadow: inset 0 0 50px rgba(255,255,255,0.5); }
+    to { box-shadow: inset 0 0 100px rgba(255,255,255,0.9); }
+  }
+
+  .arena .text {
+    font-family: 'Anton', sans-serif;
+    color: #fff;
+    text-align: center;
+    text-shadow: 4px 4px 0 #000;
+    pointer-events: none;
+  }
+  .arena.warten .text { font-size: 40px; letter-spacing: 4px; }
+  .arena.bereit .text { font-size: 60px; letter-spacing: 6px; }
+  .arena.wave .text { font-size: 80px; letter-spacing: 8px; animation: wackel-text 0.1s infinite; }
+  .arena.zu-frueh .text { font-size: 40px; letter-spacing: 3px; color: #1a1410; text-shadow: 3px 3px 0 #fff; }
+  @keyframes wackel-text {
+    0% { transform: translate(0,0); }
+    50% { transform: translate(-3px, 2px); }
+  }
+
+  .arena .sub {
+    font-family: 'Special Elite', monospace;
+    color: #fff;
+    margin-top: 10px;
+    font-size: 16px;
+    opacity: 0.8;
+  }
+
+  .stats-grid {
+    max-width: 900px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 18px;
+    padding: 0 20px;
+  }
+  .stat-card {
+    background: rgba(255, 230, 0, 0.05);
+    border: 2px solid #c9a85a;
+    padding: 18px;
+    text-align: center;
+    border-radius: 8px;
+  }
+  .stat-card .wert {
+    font-family: 'Anton', sans-serif;
+    color: #ffe600;
+    font-size: 30px;
+    letter-spacing: 2px;
+  }
+  .stat-card .label {
+    font-family: 'Courier Prime', monospace;
+    color: #c9a85a;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  .verlauf {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 20px;
+    color: #c9a85a;
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+  }
+  .verlauf-item {
+    display: inline-block;
+    background: #1a0805;
+    padding: 4px 10px;
+    margin: 3px;
+    border: 1px solid #4a3a26;
+  }
+
+  .nav-back {
+    text-align: center;
+    margin: 30px 0;
+  }
+  .nav-back a {
+    color: #c9a85a;
+    text-decoration: none;
+    border: 1px solid #c9a85a;
+    padding: 8px 18px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 2px;
+    font-size: 12px;
+    display: inline-block;
+    margin: 0 5px;
+  }
+  .nav-back a:hover { background: #c9a85a; color: #1a1410; }
+
+  .urteil {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 700px;
+    padding: 20px;
+    background: rgba(0,0,0,0.6);
+    border: 2px dashed #c9a85a;
+    color: #ffe600;
+    font-family: 'Special Elite', monospace;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="gov-bar">
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/minigames/reaktion — Wave-Part Detektor</span>
+  <span>NORMAL: 180-280 ms · KUCKUCK: 12 ms</span>
+</div>
+
+<header class="behoerde">
+  <a href="../index.html" style="text-decoration:none;"><div class="wappen">K</div></a>
+  <h1>WAVE-PART REACTION TEST
+    <small>WIE SCHNELL REAGIERST DU WIRKLICH? — MINIGAME #2</small>
+  </h1>
+  <div class="right">
+    <a href="index.html" style="color:#c9a85a; text-decoration:none; font-size:11px; letter-spacing:1px;">▸ MINIGAMES HUB</a>
+  </div>
+</header>
+
+<div class="arena warten" id="arena">
+  <div>
+    <div class="text" id="arena-text">KLICK UM ZU STARTEN</div>
+    <div class="sub" id="arena-sub">— der bildschirm wird grün. dann klicken. nicht früher.</div>
+  </div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card"><div class="wert" id="last">—</div><div class="label">LETZTER VERSUCH</div></div>
+  <div class="stat-card"><div class="wert" id="best">—</div><div class="label">BESTE ZEIT</div></div>
+  <div class="stat-card"><div class="wert" id="avg">—</div><div class="label">DURCHSCHNITT</div></div>
+  <div class="stat-card"><div class="wert" id="versuche">0</div><div class="label">VERSUCHE</div></div>
+</div>
+
+<div class="urteil" id="urteil">noch keine daten. mach erstmal einen versuch, dann analysiere ich dich.</div>
+
+<div class="verlauf" id="verlauf" style="text-align:center;"></div>
+
+<div class="nav-back">
+  <a href="clicker.html">← VORHERIGES SPIEL</a>
+  <a href="index.html">← MINIGAMES HUB</a>
+  <a href="../index.html">← AKTEN-ARCHIV</a>
+</div>
+
+<script>
+const $arena = document.getElementById('arena');
+const $text = document.getElementById('arena-text');
+const $sub = document.getElementById('arena-sub');
+const $urteil = document.getElementById('urteil');
+
+const state = {
+  modus: 'idle',
+  startZeit: 0,
+  versuche: JSON.parse(localStorage.getItem('reaktion-versuche')||'[]'),
+  best: parseInt(localStorage.getItem('reaktion-best')||'9999',10)
+};
+let waitTimer = null;
+
+function urteilGeben(ms) {
+  if (ms < 0) return 'zu früh geklickt. typisch für leute die nie warten können.';
+  if (ms < 150) return '⚡ unmenschlich schnell. bist du sicher dass du kein bot bist?';
+  if (ms < 200) return '🔥 sehr gut. fast kuckuck-niveau (wave-mode).';
+  if (ms < 250) return '👍 normal. so wie aclasher in nüchternen momenten.';
+  if (ms < 300) return '😴 mittelmäßig. wie jughead nach 16 wegwehungen.';
+  if (ms < 400) return '🐢 langsam. dein nervensystem wartet noch auf marbles.';
+  if (ms < 600) return '🦌 sehr langsam. ein bambi hätte schneller reagiert.';
+  return '💀 hast du den bildschirm überhaupt geguckt?';
+}
+
+function start() {
+  if (state.modus !== 'idle' && state.modus !== 'done' && state.modus !== 'tooearly') return;
+  state.modus = 'warten';
+  $arena.className = 'arena bereit';
+  $text.textContent = 'WARTE...';
+  $sub.textContent = 'NICHT klicken bis es grün wird. wir testen DICH, nicht den zufall.';
+  const wartezeit = 1500 + Math.random() * 4500;
+  waitTimer = setTimeout(() => {
+    state.modus = 'wave';
+    state.startZeit = performance.now();
+    $arena.className = 'arena wave';
+    $text.textContent = '🌊 WAVE PART!';
+    $sub.textContent = 'JETZT KLICKEN!';
+  }, wartezeit);
+}
+
+$arena.addEventListener('click', () => {
+  if (state.modus === 'warten') {
+    // zu früh
+    clearTimeout(waitTimer);
+    state.modus = 'tooearly';
+    $arena.className = 'arena zu-frueh';
+    $text.textContent = 'ZU FRÜH!';
+    $sub.textContent = 'jughead hat es gemeldet. klick um neu zu starten.';
+    $urteil.textContent = urteilGeben(-1);
+  } else if (state.modus === 'wave') {
+    const ms = Math.round(performance.now() - state.startZeit);
+    state.modus = 'done';
+    state.versuche.push(ms);
+    if (ms < state.best) state.best = ms;
+    localStorage.setItem('reaktion-versuche', JSON.stringify(state.versuche.slice(-20)));
+    localStorage.setItem('reaktion-best', state.best);
+    $arena.className = 'arena warten';
+    $text.textContent = ms + ' ms';
+    $sub.textContent = 'klick um nochmal zu testen';
+    rendereStats();
+    $urteil.textContent = urteilGeben(ms);
+  } else if (state.modus === 'idle' || state.modus === 'done' || state.modus === 'tooearly') {
+    start();
+  }
+});
+
+function rendereStats() {
+  if (state.versuche.length === 0) return;
+  document.getElementById('last').textContent = state.versuche[state.versuche.length-1] + 'ms';
+  document.getElementById('best').textContent = (state.best === 9999 ? '—' : state.best + 'ms');
+  const avg = Math.round(state.versuche.reduce((s,x)=>s+x,0) / state.versuche.length);
+  document.getElementById('avg').textContent = avg + 'ms';
+  document.getElementById('versuche').textContent = state.versuche.length;
+  document.getElementById('verlauf').innerHTML = state.versuche.slice(-15).map(v => `<span class="verlauf-item">${v}ms</span>`).join('');
+}
+rendereStats();
+if (state.versuche.length > 0) $urteil.textContent = urteilGeben(state.versuche[state.versuche.length-1]);
+
+console.log('%c⚡ REACTION TEST', 'background:#2bff52; color:#000; padding:8px 16px; font-size:18px; font-weight:bold;');
+</script>
+</body>
+</html>
