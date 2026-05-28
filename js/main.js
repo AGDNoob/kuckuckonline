@@ -2101,7 +2101,7 @@ const SPENDER_HALL = [
   { name: 'Kuckuck',                   betrag: '500,00 €',notiz: 'hat es 2 Min später wieder mitgenommen', heldenakte: true },
   { name: 'Triple-T',                  betrag: '1 Holz',  notiz: 'nicht annehmbar — Sachspende verweigert' },
   { name: 'ein anonymes Bambi',        betrag: '0,00 €',  notiz: '3 Schmetterlinge geschickt — wir akzeptieren keine Tiere' },
-  { name: 'Steve',                     betrag: '— €',     notiz: 'wollte vorbeikommen. ist nicht angekommen. siehe Chat-Minigame.' },
+  { name: 'Steve',                     betrag: '— €',     notiz: 'galt als vermisst — lebt & wohlauf. siehe Chat-Minigame.' },
   { name: 'polnischer Zoink',          betrag: '0,00 €',  notiz: 'leugnet überhaupt zu existieren' },
   { name: 'Captain Carry',             betrag: '— €',     notiz: 'in Pension. nicht erreichbar.' },
   { name: 'ArenaiTV',                  betrag: '0,00 €',  notiz: '"das ist free, ich spende nichts."' },
