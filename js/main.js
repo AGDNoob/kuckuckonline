@@ -468,6 +468,30 @@ const AKTEN = {
       </ul>
       <div class="marginalia">Kuckuck reagierte bislang nicht. → siehe auch <a href="marbles.html" style="color:var(--stamp-red)">marbles.html</a></div>`
   },
+  "121": {
+    nr: "DOSSIER #121", titel: "DER LEERE THRON",
+    klass: "GOAT", datum: "gestern, ca. 23:47", ort: "Acer-Stuhl-Setup (Kuckuck abwesend)",
+    bild: null,
+    inhalt: `
+      <p>Der sogenannte "Stuhl-Vorfall" gilt bereits jetzt als der größte Content-Moment in der Geschichte des Kanals — und Kuckuck war nicht mal anwesend.</p>
+      <p>Rekonstruierter Ablauf:</p>
+      <ul class="absurd-list">
+        <li>Kuckuck musste dringend auf Klo</li>
+        <li>er ließ <b>Black Blizzard</b> im <b>Auto-Mode</b> weiterlaufen</li>
+        <li>die Facecam zeigte ab diesem Moment nur noch: den <b>leeren Acer-Stuhl</b></li>
+        <li>der Stuhl tat: nichts</li>
+        <li>der Stuhl tat dieses Nichts mit <b>maximaler Aura</b></li>
+      </ul>
+      <p>Der Chat reagierte sofort und vollständig brainrotted:</p>
+      <p class="quote">"GOOO" · "W" · "GGGGG" · "der stuhl ist HIM" · "STUHL GOAT" · "leerer thron arc" · "bestes pov" · "stuhl carriet"</p>
+      <p>Innerhalb von Sekunden hatte die gesamte Community beschlossen, den Acer-Stuhl als <b>absoluten GOAT</b> anzuerkennen. Niemand erwähnte, dass buchstäblich nichts passierte.</p>
+      <div class="marginalia">Moderator Jughead schrieb im Chat — öffentlich, für alle sichtbar:<br>"ehrlich der stuhl macht besseren content als kuckuck."<br>Es war das erste Mal, dass Jughead nicht weggeweht wurde.</div>
+      <p>Der entstandene Clip (siehe eingebettetes Beweismaterial auf der Startseite) erreichte innerhalb von Stunden <b>847.000 Aufrufe</b> und gilt als offizieller Beginn der "Leerer-Thron-Ära".</p>
+      <p><b>Besonders verstörend:</b> Als Kuckuck vom Klo zurückkam, war sein eigener Stream-Peak bereits überschritten. Der Stuhl hatte ihn in unter 4 Minuten überholt.</p>
+      <p class="quote">"ich war 4 minuten weg und der stuhl hat mehr aura gefarmt als ich in 3 jahren." — Kuckuck (angeblich)</p>
+      <p>Experten klassifizieren den Vorfall als <b>"Full Furniture Supremacy"</b>. Black Blizzard lief während der gesamten Zeit im Auto-Mode brav weiter — manche behaupten, der Stuhl habe den Run besser gespielt als Kuckuck es je könnte.</p>
+      <div class="marginalia">→ Clip ansehen: Startseite, Sektion "DER LEERE THRON". Direkt auf der Seite abspielbar — kein Twitch-Wechsel nötig.</div>`
+  },
   "120": {
     nr: "DOSSIER #120", titel: "█████████ ██████ ████",
     klass: "VERSCHLÜSSELT", datum: "█████", ort: "█████",
@@ -1888,6 +1912,62 @@ window.kuckuckcheat = function() {
   console.log('%c🎮 CHEATS', 'background:#000; color:#ffe600; padding:8px; font-weight:bold;');
   return ['gibAuraGib(n)', 'window.state.aura = X', 'wave()', 'aura()', 'roast()', 'tungtungtung()', 'kuckuck()'];
 };
+
+// =================================================================
+// FAKE TWITCH CHAT (clip-sektion "Der Leere Thron")
+// =================================================================
+(function fakeChat() {
+  const box = document.getElementById('clip-chat');
+  if (!box) return;
+  const CHAT_NACHRICHTEN = [
+    ['kuckuck_fan_03','u1','GOOO'],
+    ['plexi','u2','der stuhl ist HIM'],
+    ['arenaitv','u3','GGGGG'],
+    ['aclasher','u4','W stuhl','mod'],
+    ['gd_enjoyer','u5','STUHL GOAT 🐐'],
+    ['mystery','u6','leerer thron arc real'],
+    ['noob_2009','u1','W W W W W'],
+    ['arthur','u2','bestes pov ever'],
+    ['einGDNoob','u3','der stuhl carriet harder als kuckuck'],
+    ['jughead','u4','ehrlich der stuhl macht besseren content als kuckuck','mod'],
+    ['xX_wave_Xx','u5','GOOOO 🔥🔥'],
+    ['triple_t_real','u6','TUNG TUNG TUNG'],
+    ['safti','u1','wo ist kuckuck lol'],
+    ['kuckuck_clips','u2','CLIP IT 📸'],
+    ['aura_farmer','u3','der stuhl hat mehr aura als ich je haben werde'],
+    ['plexi','u2','ele spongebob passt grad perfekt'],
+    ['gd_god','u4','black blizzard im auto und KEINER stirbt'],
+    ['zoink_lover','u5','deutscher zoink wer? STUHL zoink'],
+    ['random_andy','u6','warum schau ich einem stuhl zu'],
+    ['random_andy','u6','und warum ist es so gut'],
+    ['marbles_now','u1','GIB MARBLES — ach egal STUHL'],
+    ['acer_official','u3','das ist unser stuhl 🪑 #sponsored'],
+    ['kuckuck_fan_03','u1','er kommt zurück gleich'],
+    ['mystery','u6','ZU SPÄT der stuhl ist jetzt main character'],
+    ['jughead','u4','sry kuckuck aber der stuhl > du','mod'],
+    ['gg_enjoyer','u5','GGGGGGGGG'],
+    ['bambi_42','u2','🦌 W'],
+    ['nichtkuckuck','u3','das war biologisch unmöglich (der stuhl)'],
+  ];
+  let i = 0;
+  function add() {
+    const [user, farbe, text, istMod] = CHAT_NACHRICHTEN[i % CHAT_NACHRICHTEN.length];
+    const z = document.createElement('div');
+    z.className = 'chat-zeile';
+    z.innerHTML =
+      (istMod ? '<span class="badge-mod">MOD</span>' : '') +
+      `<span class="user ${istMod ? 'mod' : farbe}">${user}</span><span class="nachricht">: ${text}</span>`;
+    box.appendChild(z);
+    // alte entfernen (max 30)
+    while (box.children.length > 30) box.removeChild(box.firstChild);
+    box.scrollTop = box.scrollHeight;
+    i++;
+  }
+  // erstmal ein paar füllen
+  for (let k = 0; k < 8; k++) add();
+  // dann fortlaufend
+  setInterval(add, 1400 + Math.random()*800);
+})();
 
 // =================================================================
 // LIVE-TICKER NAHTLOS DUPLIZIEREN

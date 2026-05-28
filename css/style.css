@@ -1467,6 +1467,118 @@ body.wave-mode::before {
 }
 
 /* ============================================================
+   CLIP-PLAYER (Twitch embed — Der Stuhl-Stream)
+   ============================================================ */
+.clip-sektion {
+  max-width: 980px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+.clip-box {
+  background: linear-gradient(135deg, #1a1410 0%, #2a160c 100%);
+  border: 4px solid #ff3a8c;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 0 50px rgba(255, 58, 140, 0.3);
+  position: relative;
+}
+.clip-box::before {
+  content: '🔴 GEKLIPPTER BEWEIS';
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #b8000f;
+  color: #fff;
+  padding: 4px 16px;
+  font-family: 'Anton', sans-serif;
+  letter-spacing: 3px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.clip-box h3 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(24px, 4vw, 38px);
+  letter-spacing: 2px;
+  color: #ffe600;
+  text-align: center;
+  margin: 6px 0 4px;
+  border: none;
+  text-shadow: 2px 2px 0 #000;
+}
+.clip-box .clip-sub {
+  font-family: 'Caveat', cursive;
+  font-size: 20px;
+  color: #c9a85a;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.clip-player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 3px solid #c9a85a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.clip-player iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.clip-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  color: #c9a85a;
+}
+.clip-meta .stat b { color: #ffe600; font-family: 'Anton', sans-serif; font-size: 16px; letter-spacing: 1px; }
+.clip-meta a {
+  color: #ff3a8c;
+  text-decoration: none;
+  border: 1px solid #ff3a8c;
+  padding: 6px 12px;
+  letter-spacing: 1px;
+}
+.clip-meta a:hover { background: #ff3a8c; color: #fff; }
+
+/* fake chat overlay */
+.clip-chat {
+  margin-top: 16px;
+  background: #0e0e10;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  max-height: 220px;
+  overflow-y: auto;
+  font-family: -apple-system, system-ui, sans-serif;
+  font-size: 13px;
+}
+.clip-chat .chat-zeile { padding: 3px 0; line-height: 1.4; }
+.clip-chat .user { font-weight: 700; }
+.clip-chat .u1 { color: #ff7ac6; }
+.clip-chat .u2 { color: #5ac8fa; }
+.clip-chat .u3 { color: #2bff52; }
+.clip-chat .u4 { color: #ffd700; }
+.clip-chat .u5 { color: #ff8c00; }
+.clip-chat .u6 { color: #b18cff; }
+.clip-chat .nachricht { color: #efeff1; }
+.clip-chat .mod { color: #00ad03; }
+.clip-chat .badge-mod {
+  background: #00ad03; color: #fff; font-size: 10px;
+  padding: 0 4px; border-radius: 3px; margin-right: 4px;
+  font-weight: 700;
+}
+
+/* ============================================================
    JUGHEAD-SPENDEN-BUTTON
    ============================================================ */
 .spende-mega {
