@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FINDE STEVE — BEGV Minigames</title>
+<title>CHAT MIT STEVE — BEGV Minigames</title>
 <link rel="stylesheet" href="../css/style.css">
 <style>
   body {
@@ -331,6 +331,66 @@
     text-transform: uppercase;
   }
 
+  /* AKT 1 — vermisst-karte (inline im chat-verlauf) */
+  .vermisst-inline {
+    align-self: stretch;
+    margin: 10px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #5a0a0a;
+  }
+  .vermisst-inline .v-banner {
+    background: #b8000f;
+    color: #fff;
+    padding: 12px 14px;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 3px;
+    font-size: 18px;
+    text-align: center;
+    animation: blink-alarm 1.5s infinite;
+  }
+  @keyframes blink-alarm {
+    0%, 60%, 100% { background: #b8000f; }
+    30% { background: #7a0008; }
+  }
+  .vermisst-inline .v-ascii {
+    background: #fff8e8;
+    color: #6a5a3a;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10.5px;
+    white-space: pre;
+    padding: 12px 14px 0;
+    line-height: 1.1;
+    overflow-x: auto;
+  }
+  .vermisst-inline .v-akte {
+    background: #fff8e8;
+    color: #1a1410;
+    padding: 14px;
+    font-family: 'Special Elite', monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  .vermisst-inline .v-akte h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: #b8000f;
+    border-bottom: 2px solid #1a1410;
+    padding-bottom: 4px;
+    margin: 0 0 8px;
+  }
+  .vermisst-inline .v-akte .feld { margin-bottom: 5px; }
+  .vermisst-inline .v-akte .feld b {
+    display: inline-block;
+    width: 120px;
+    color: #8e8e93;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
   .nochmal {
     background: #ffe600;
     color: #1a1410;
@@ -372,13 +432,13 @@
 <body>
 
 <div class="gov-bar">
-  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/minigames/finde-steve — Operation Schnurrbart</span>
+  <span><span class="lock">🔒</span> begv.bund.kuckuck.online/minigames/chat-steve — Operation Schnurrbart</span>
   <span>HINWEIS: dies ist ein internes ermittlungs-tool</span>
 </div>
 
 <header class="behoerde">
   <a href="../index.html" style="text-decoration:none;"><div class="wappen">K</div></a>
-  <h1>FINDE STEVE
+  <h1>CHAT MIT STEVE
     <small>OPERATION SCHNURRBART · LIVE-PROTOKOLL · MINIGAME #4</small>
   </h1>
   <div class="right">
@@ -387,9 +447,9 @@
 </header>
 
 <section class="hero" style="padding: 20px 20px 10px;">
-  <div class="leak-banner">OPERATION SCHNURRBART · FALL OFFEN</div>
-  <h2 style="font-size: 38px;"><span class="red">FINDE</span> STEVE</h2>
-  <div class="untertitel">steve gilt als vermisst. ist er aber nicht. folge seiner spur durch köln und finde ihn — er lebt.</div>
+  <div class="leak-banner">DOSSIER #044 · OPERATION SCHNURRBART</div>
+  <h2 style="font-size: 38px;"><span class="red">CHAT</span> MIT STEVE</h2>
+  <div class="untertitel">vereinbare ein meetup mit steve. er kommt nicht. eine woche später meldet er sich heimlich — und du musst ihn finden. (spoiler: er lebt.)</div>
 </section>
 
 <div class="chat-app" id="app">
@@ -435,6 +495,14 @@ $lauf.textContent = gefundenCount > 0
 const state = { spuren: [], ortAktiv: null };
 let ortIndex = -1;
 
+// AKT 1 (meetup) state
+let aktiveBaum = null;          // welcher dialog-baum gerade läuft
+let aktuellerOrt = null;        // gewählter meetup-ort
+let laeufe = parseInt(localStorage.getItem('chat-steve-laeufe') || '0', 10);
+
+// spuren-tracker erst in akt 2 (suche) zeigen
+$track.style.display = 'none';
+
 // =================================================================
 // CHAT-HELFER
 // =================================================================
@@ -475,6 +543,14 @@ function narration(text) {
   scrollDown();
 }
 
+function zeitTrenner(text) {
+  const tr = document.createElement('div');
+  tr.className = 'msg-zeit';
+  tr.textContent = text;
+  $msg.appendChild(tr);
+  scrollDown();
+}
+
 function addSpur(text) {
   state.spuren.push(text);
   $track.textContent = '🔍 SPUREN: ' + state.spuren.length;
@@ -486,7 +562,353 @@ function addSpur(text) {
 }
 
 // =================================================================
-// INTRO-DIALOG (führt immer zur Suche — kein "vermisst"-Ende mehr)
+// GEMEINSAME DIALOG-ENGINE (für beide bäume)
+// =================================================================
+function rendereAntworten(antworten) {
+  $ant.innerHTML = '';
+  antworten.forEach(a => {
+    const b = document.createElement('button');
+    b.className = 'antwort-btn';
+    b.textContent = a.text;
+    b.addEventListener('click', () => {
+      $ant.querySelectorAll('.antwort-btn').forEach(x => x.disabled = true);
+      waehleAntwort(a);
+    });
+    $ant.appendChild(b);
+  });
+}
+
+function waehleAntwort(a) {
+  sendeNachricht('du', a.text);
+  if (a.ort) aktuellerOrt = a.ort;
+  setTimeout(() => {
+    if (a.goto === 'AUF_DEM_WEG') return zeigeMeetup();
+    if (a.goto === 'WEG')         return rueckzieherEnde();
+    if (a.goto === 'START_SUCHE') return starteSuche();
+    gehe(a.goto);
+  }, 550);
+}
+
+function gehe(id) {
+  const k = aktiveBaum[id];
+  if (!k) return console.error('unbekannter knoten:', id);
+  $status.textContent = 'tippt...';
+  $ant.innerHTML = '';
+  tippt();
+  const w = Math.min(2000, 500 + k.text.length * 22);
+  setTimeout(() => {
+    entferneTipp();
+    sendeNachricht('steve', k.text);
+    $status.textContent = 'online';
+    rendereAntworten(k.antworten);
+  }, w);
+}
+
+// =================================================================
+// AKT 1 — MEETUP-DIALOG (endet damit dass steve nicht kommt)
+// =================================================================
+const MEETUP_BAUM = {
+  start: {
+    text: 'ey alles gut?',
+    antworten: [
+      { text: 'ja klar, was geht?', goto: 'a_freundlich' },
+      { text: 'wer bist du?',       goto: 'b_misstrauisch' }
+    ]
+  },
+
+  // ---------- PFAD A: FREUNDLICH ----------
+  a_freundlich: {
+    text: 'läuft. hab dir was zu zeigen. lust auf treffen?',
+    antworten: [
+      { text: 'ja safe, wann?',           goto: 'mv_bahnhof' },
+      { text: 'was hast denn zu zeigen?',  goto: 'a_was' }
+    ]
+  },
+  a_was: {
+    text: 'etwas. zu krass für chat. vertrau mir.',
+    antworten: [
+      { text: 'okay wann?',      goto: 'mv_acer' },
+      { text: 'klingt sketchy.', goto: 'a_sketchy' }
+    ]
+  },
+  a_sketchy: {
+    text: 'ist es nicht. ich bin steve. nicht jughead.',
+    antworten: [
+      { text: 'haha okay. bin dabei.', goto: 'mv_bambiland' },
+      { text: 'wer ist jughead?',      goto: 'a_jughead' }
+    ]
+  },
+  a_jughead: {
+    text: 'lol egal. willst du jetzt treffen oder nicht.',
+    antworten: [
+      { text: 'ja schon. wo?',    goto: 'mv_bunker' },
+      { text: 'eher nicht doch.', goto: 'rueckzieher' }
+    ]
+  },
+
+  // ---------- PFAD B: MISSTRAUISCH ----------
+  b_misstrauisch: {
+    text: 'kennst mich. ist auch egal. ich habs eilig. treffen?',
+    antworten: [
+      { text: 'okay wann?',    goto: 'mv_bahnhof' },
+      { text: 'klingt fishy.', goto: 'b_fishy' }
+    ]
+  },
+  b_fishy: {
+    text: 'ist es nicht. ich erklärs persönlich. ja?',
+    antworten: [
+      { text: 'okay dann ja',    goto: 'mv_acer' },
+      { text: 'nein eher nicht', goto: 'b_drueck' }
+    ]
+  },
+  b_drueck: {
+    text: 'bitte. es ist wichtig. wirklich.',
+    antworten: [
+      { text: 'na gut. wo?',     goto: 'mv_bambiland' },
+      { text: 'nein heißt nein', goto: 'rueckzieher' }
+    ]
+  },
+
+  // ---------- MEETUP-VORSCHLÄGE ----------
+  mv_bahnhof: {
+    text: 'bahnhofsplatz köln. freitag 21 uhr. passt?',
+    antworten: [
+      { text: 'passt, bin da.',             goto: 'm_confirm', ort: 'bahnhof' },
+      { text: 'wo genau am bahnhofsplatz?', goto: 'md_bahnhof' }
+    ]
+  },
+  md_bahnhof: {
+    text: 'beim dönerladen wo safti immer steht. weißt schon.',
+    antworten: [
+      { text: 'ah safti. ja klar. bin da.', goto: 'm_confirm', ort: 'bahnhof' },
+      { text: 'safti? wer ist safti.',      goto: 'm_confirm', ort: 'bahnhof' }
+    ]
+  },
+
+  mv_acer: {
+    text: 'acer-stuhl-werk, hintereingang. heute 23 uhr. ok?',
+    antworten: [
+      { text: 'okay bin da.',   goto: 'm_confirm', ort: 'acer' },
+      { text: 'wieso so spät?', goto: 'md_acer' }
+    ]
+  },
+  md_acer: {
+    text: 'frag nicht. der stuhl darf das nicht sehen.',
+    antworten: [
+      { text: 'der stuhl?',         goto: 'm_confirm', ort: 'acer' },
+      { text: 'ok ich frag nicht.', goto: 'm_confirm', ort: 'acer' }
+    ]
+  },
+
+  mv_bambiland: {
+    text: 'bambiland-eingang. sonntag mittag. komm allein.',
+    antworten: [
+      { text: 'klar. allein. bin da.', goto: 'm_confirm', ort: 'bambiland' },
+      { text: 'wieso allein?',         goto: 'md_bambiland' }
+    ]
+  },
+  md_bambiland: {
+    text: 'die rehe werden nervös bei gruppen.',
+    antworten: [
+      { text: '...okay. allein. bin da.', goto: 'm_confirm', ort: 'bambiland' },
+      { text: 'das ergibt keinen sinn',   goto: 'm_confirm', ort: 'bambiland' }
+    ]
+  },
+
+  mv_bunker: {
+    text: 'bunker 7, kellergeschoss. morgen 03:00. nicht klingeln.',
+    antworten: [
+      { text: 'verstanden. bin da.',    goto: 'm_confirm', ort: 'bunker' },
+      { text: 'morgen 3 uhr morgens?!', goto: 'md_bunker' }
+    ]
+  },
+  md_bunker: {
+    text: 'jughead schläft dann. sonst geht nicht.',
+    antworten: [
+      { text: 'na gut. bin da.',        goto: 'm_confirm', ort: 'bunker' },
+      { text: 'jughead? schon wieder.', goto: 'm_confirm', ort: 'bunker' }
+    ]
+  },
+
+  // ---------- CONFIRM ----------
+  m_confirm: {
+    text: 'top. bis dann. nimm nichts mit was leuchtet.',
+    antworten: [
+      { text: 'warum?',               goto: 'm_warum' },
+      { text: 'okay bin auf dem weg', goto: 'AUF_DEM_WEG' }
+    ]
+  },
+  m_warum: {
+    text: 'frag nicht. komm einfach.',
+    antworten: [
+      { text: 'okay bin auf dem weg', goto: 'AUF_DEM_WEG' }
+    ]
+  },
+
+  // ---------- RÜCKZIEHER ----------
+  rueckzieher: {
+    text: 'schade. dachte du verstehst.',
+    antworten: [
+      { text: 'doch okay, treffen?', goto: 'mv_bunker' },
+      { text: 'tut mir leid, nein.', goto: 'WEG' }
+    ]
+  }
+};
+
+const MEETUPS = {
+  bahnhof: {
+    ort: 'Bahnhofsplatz Köln',
+    zeit: 'Freitag, 21:00',
+    ascii:
+`     ___________________
+    |   [BAHNHOF]      |
+    |   .            . |
+    |        ?         |
+    |__________________|
+       (niemand da)`,
+    flavor: 'ein einsamer döner liegt auf der straße. niemand isst ihn, niemand hat ihn bestellt.',
+    letzteNachricht: 'bin gleich da',
+    seit: '12 Minuten'
+  },
+  acer: {
+    ort: 'Acer-Stuhl-Werk, Hintereingang',
+    zeit: 'Heute, 23:00',
+    ascii:
+`     _________________
+    |   [WERK]        |
+    |   ___           |
+    |  |   |          |
+    |  | ? |          |
+    |  |___|  *knarz*  |
+    |_________________|`,
+    flavor: 'der hintereingang ist offen. drinnen knarzt ein acer-stuhl. steve ist nicht zu sehen. der stuhl wirkt nervös.',
+    letzteNachricht: 'der stuhl darf das nicht sehen',
+    seit: '47 Minuten'
+  },
+  bambiland: {
+    ort: 'Bambiland-Eingang',
+    zeit: 'Sonntag, 12:00',
+    ascii:
+`       *  .  *  .  *
+      .  __________  .
+       ( BAMBILAND )
+      .                .
+       *    ?  o  *  *
+        (rehe schauen weg)`,
+    flavor: 'die rehe wirken angespannt. ein schmetterling landet auf einer bank, auf der niemand sitzt. steve ist nicht da.',
+    letzteNachricht: 'komm allein',
+    seit: '2 Stunden 4 Minuten'
+  },
+  bunker: {
+    ort: 'Bunker 7, Kellergeschoss',
+    zeit: 'Morgen, 03:00',
+    ascii:
+`       #############
+       # BUNKER 7  #
+       #           #
+       #     ?     #
+       #           #
+       #############`,
+    flavor: 'die tür war unverschlossen. drinnen ist es dunkel. jughead schläft im nebenraum und reagiert nicht. steve ist nicht da. aber irgendwo knarzt ein stuhl.',
+    letzteNachricht: 'jughead schläft dann',
+    seit: '4 Minuten'
+  }
+};
+
+const VERMISST_FLAVOR_ZUSATZ = [
+  'Hinweis: Es liegen Berichte vor, dass Steve identisch mit "Kurzhaarmeister" sei.',
+  'Hinweis: Letzte digitale Spur führt zu einem 48H-Battle-Streaming-Setup.',
+  'Hinweis: Steve hat keine bekannten Verwandten. Außer vielleicht Kurzhaarmeister.',
+  'Hinweis: Auf dem Boden liegen Schnurrbart-Härchen. Forensik läuft.',
+  'Hinweis: Steve wurde zuletzt mit 732 Demons gesehen.',
+  'Hinweis: Die letzte Nachricht wurde via Bunker-7-Server geroutet. Aclasher (admin) untersucht.'
+];
+
+function zeigeMeetup() {
+  $ant.innerHTML = '';
+  $status.textContent = 'online';
+  const m = MEETUPS[aktuellerOrt];
+  setTimeout(() => sendeNachricht('steve', 'top. bis gleich.'), 500);
+  setTimeout(() => {
+    narration('🚗 du fährst zum treffpunkt: ' + m.ort + ' · ' + m.zeit + '...');
+    setTimeout(() => zeigeVermisst(m), 1900);
+  }, 1500);
+}
+
+function zeigeVermisst(m) {
+  $status.textContent = 'vermisst';
+  laeufe++;
+  localStorage.setItem('chat-steve-laeufe', laeufe);
+  const zusatz = VERMISST_FLAVOR_ZUSATZ[Math.floor(Math.random() * VERMISST_FLAVOR_ZUSATZ.length)];
+
+  narration('du bist pünktlich da. steve nicht. ' + m.flavor);
+
+  const card = document.createElement('div');
+  card.className = 'vermisst-inline';
+  card.innerHTML =
+    '<div class="v-banner">⚠ STEVE GILT ALS VERMISST</div>' +
+    '<div class="v-ascii"></div>' +
+    '<div class="v-akte">' +
+      '<h3>FAHNDUNGSAUFNAHME · BEGV</h3>' +
+      '<div class="feld"><b>Name:</b> <span class="f1"></span></div>' +
+      '<div class="feld"><b>Letzte Sichtung:</b> nie</div>' +
+      '<div class="feld"><b>Treffpunkt:</b> <span class="f2"></span></div>' +
+      '<div class="feld"><b>Geplante Zeit:</b> <span class="f3"></span></div>' +
+      '<div class="feld"><b>Vermisst seit:</b> <span class="f4"></span></div>' +
+      '<div class="feld"><b>Letzte Nachricht:</b> <span class="f5"></span></div>' +
+      '<hr style="margin:8px 0; border:none; border-top:1px dashed #999;">' +
+      '<div class="f6" style="font-style:italic;"></div>' +
+      '<hr style="margin:8px 0; border:none; border-top:1px dashed #999;">' +
+      '<div><b>Aktenzeichen:</b> <span class="f7"></span></div>' +
+      '<div><b>Bearbeitet durch:</b> Jughead (schläft)</div>' +
+    '</div>';
+  card.querySelector('.v-ascii').textContent = m.ascii;
+  card.querySelector('.f1').textContent = 'Steve (= Kurzhaarmeister)';
+  card.querySelector('.f2').textContent = m.ort;
+  card.querySelector('.f3').textContent = m.zeit;
+  card.querySelector('.f4').textContent = m.seit;
+  card.querySelector('.f5').textContent = '„' + m.letzteNachricht + '"';
+  card.querySelector('.f6').textContent = zusatz;
+  card.querySelector('.f7').textContent = 'BEGV-STEVE-VERMISST-' + laeufe;
+  $msg.appendChild(card);
+  scrollDown();
+
+  setTimeout(zeigeWocheButton, 1400);
+}
+
+function rueckzieherEnde() {
+  $status.textContent = 'offline';
+  setTimeout(() => {
+    sendeNachricht('steve', 'ok. ich melde mich nie wieder.');
+    setTimeout(() => {
+      narration('steve hat den chat verlassen. ab sofort gilt er als vermisst.');
+      setTimeout(zeigeWocheButton, 1100);
+    }, 1200);
+  }, 700);
+}
+
+function zeigeWocheButton() {
+  $ant.innerHTML = '';
+  const b = document.createElement('button');
+  b.className = 'antwort-btn weiter';
+  b.textContent = '⏭  eine woche später...';
+  b.addEventListener('click', () => { b.disabled = true; eineWocheSpaeter(); });
+  $ant.appendChild(b);
+  scrollDown();
+}
+
+function eineWocheSpaeter() {
+  $ant.innerHTML = '';
+  zeitTrenner('· · ·  Eine Woche später  · · ·');
+  $status.textContent = 'offline · vermisst';
+  setTimeout(() => {
+    aktiveBaum = DIALOG;   // wechsel auf den such-dialog
+    gehe('start');         // 'psst. du da...'
+  }, 1500);
+}
+
+// =================================================================
+// AKT 2 — SUCH-INTRO (führt immer zur suche — kein vermisst-ende)
 // =================================================================
 const DIALOG = {
   start: {
@@ -542,43 +964,6 @@ const DIALOG = {
     ]
   }
 };
-
-function rendereAntworten(antworten) {
-  $ant.innerHTML = '';
-  antworten.forEach(a => {
-    const b = document.createElement('button');
-    b.className = 'antwort-btn';
-    b.textContent = a.text;
-    b.addEventListener('click', () => {
-      $ant.querySelectorAll('.antwort-btn').forEach(x => x.disabled = true);
-      waehleAntwort(a);
-    });
-    $ant.appendChild(b);
-  });
-}
-
-function waehleAntwort(a) {
-  sendeNachricht('du', a.text);
-  setTimeout(() => {
-    if (a.goto === 'START_SUCHE') return starteSuche();
-    gehe(a.goto);
-  }, 550);
-}
-
-function gehe(id) {
-  const k = DIALOG[id];
-  if (!k) return console.error('unbekannter knoten:', id);
-  $status.textContent = 'tippt...';
-  $ant.innerHTML = '';
-  tippt();
-  const w = Math.min(2000, 500 + k.text.length * 22);
-  setTimeout(() => {
-    entferneTipp();
-    sendeNachricht('steve', k.text);
-    $status.textContent = 'online';
-    rendereAntworten(k.antworten);
-  }, w);
-}
 
 // =================================================================
 // ORTE (die eigentliche Suche)
@@ -692,6 +1077,8 @@ const ORTE = [
 function starteSuche() {
   $ant.innerHTML = '';
   $status.textContent = 'online';
+  $track.style.display = '';
+  $track.textContent = '🔍 SPUREN: ' + state.spuren.length;
   tippt();
   setTimeout(() => {
     entferneTipp();
@@ -882,7 +1269,7 @@ function zeigeFinaleScreen() {
         '<div><b>Steve gefunden:</b> ' + gefundenCount + '× insgesamt</div>' +
         '<div><b>Bearbeitet durch:</b> du (Jughead schläft noch)</div>' +
       '</div>' +
-      '<button class="nochmal" onclick="location.reload()">🔄 NOCHMAL SUCHEN</button>' +
+      '<button class="nochmal" onclick="location.reload()">🔄 NOCHMAL VON VORN</button>' +
       '<div style="margin-top:14px;">' +
         '<a href="index.html" style="color:#c9a85a; text-decoration:none; border:1px solid #c9a85a; padding:8px 16px; font-family:\'Anton\',sans-serif; letter-spacing:2px; font-size:12px; display:inline-block; margin:4px;">← MINIGAMES HUB</a>' +
         '<a href="../index.html" style="color:#c9a85a; text-decoration:none; border:1px solid #c9a85a; padding:8px 16px; font-family:\'Anton\',sans-serif; letter-spacing:2px; font-size:12px; display:inline-block; margin:4px;">← AKTEN-ARCHIV</a>' +
@@ -894,7 +1281,7 @@ function zeigeFinaleScreen() {
 }
 
 // =================================================================
-// START
+// START — AKT 1 zuerst
 // =================================================================
 const zeit = document.createElement('div');
 zeit.className = 'msg-zeit';
@@ -905,11 +1292,12 @@ const minuten = String(datum.getMinutes()).padStart(2,'0');
 zeit.textContent = `Heute · ${tag} ${stunden}:${minuten}`;
 $msg.appendChild(zeit);
 
+aktiveBaum = MEETUP_BAUM;
 setTimeout(() => gehe('start'), 600);
 
 // console
-console.log('%c🔍 FINDE STEVE', 'background:#1a8a2c; color:#fff; padding:8px 16px; font-size:16px; font-weight:bold;');
-console.log('%cdiesmal lebt er. folge der spur. tür-code = steves demon-count (732).', 'color:#666; font-size:11px; font-style:italic;');
+console.log('%c💬 CHAT MIT STEVE → 🔍 FINDE STEVE', 'background:#007aff; color:#fff; padding:8px 16px; font-size:15px; font-weight:bold;');
+console.log('%cakt 1: er kommt nicht. eine woche später: finde ihn. tür-code = steves demon-count (732).', 'color:#666; font-size:11px; font-style:italic;');
 </script>
 </body>
 </html>

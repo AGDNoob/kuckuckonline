@@ -1975,6 +1975,14 @@ window.kuckuckcheat = function() {
 (function dupliziereTicker() {
   const inner = document.getElementById('ticker-inner');
   if (!inner) return;
+  // Steve-Status aus dem Minigame-Fortschritt: vermisst → gefunden
+  const gefunden = parseInt(localStorage.getItem('chat-steve-gefunden') || '0', 10);
+  const steveSpan = inner.querySelector('.ticker-steve');
+  if (steveSpan) {
+    steveSpan.textContent = gefunden > 0
+      ? '🟢 EILMELDUNG: STEVE LEBT UND IST WOHLAUF — NICHT MEHR VERMISST'
+      : '🔴 FAHNDUNG: STEVE GILT ALS VERMISST — zuletzt gesehen mit 732 Demons';
+  }
   // bestehende children einmal komplett klonen und anhängen → ergibt 2x den content
   // so kann die CSS-animation von 0% → -50% nahtlos loopen
   const clone = inner.cloneNode(true);
